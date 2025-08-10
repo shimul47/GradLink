@@ -31,5 +31,6 @@ GradLink aims to facilitate meaningful connections between students and alumni o
 
 ## Team Members
 
+- Sohanur Rahman Shimul
 - Mahmudul Islam Sohan
 - Samiul Mahmud
