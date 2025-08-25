@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
+import Verify from "../pages/Verify";
 
 
 export const router = createBrowserRouter([
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: '/contact',
         Component: Contact,
+      },
+      {
+        path: '/verify',
+        Component: Verify,
       },
 
 

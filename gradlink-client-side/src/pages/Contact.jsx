@@ -30,7 +30,7 @@ const Contact = () => {
       icon: MapPin,
       title: "Visit Us",
       description: "BRAC University Campus",
-      contact: "66 Mohakhali, Dhaka 1212",
+      contact: "Merul Badda, Dhaka 1212",
       action: "Get Directions"
     }
   ];
