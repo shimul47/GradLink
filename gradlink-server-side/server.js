@@ -1,14 +1,26 @@
 const express = require("express");
 const mySqlPool = require("./config/db");
 const app = express();
+const cors = require("cors");
 
+//accept frontend -- middleware
+app.use(cors());
+
+//define port
 if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
-//routes
-app.use("/student", require("./routes/studentRoutes"));
-app.use("/alumni", require("./routes/alumniRoutes"));
+//checking connection
+app.get("", (req, res) => {
+  res.send("Page is running");
+});
 
+//routes
+app.use(require("./routes/studentRoutes"));
+app.use(require("./routes/alumniRoutes"));
+app.use(require("./routes/adminRoutes"));
+
+//
 let PORT = process.env.PORT || 8080;
 
 //sql db connection

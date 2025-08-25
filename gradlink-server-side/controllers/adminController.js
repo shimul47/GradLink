@@ -1,8 +1,8 @@
 const db = require("../config/db");
 
-const getStudents = async (req, res) => {
+const getdetails = async (req, res) => {
   try {
-    const data = await db.query("select * from students");
+    const data = await db.query("select * from admin_db");
     if (!data) {
       return res.send("No data in DB");
     }
@@ -12,4 +12,4 @@ const getStudents = async (req, res) => {
   }
 };
 
-module.exports = { getStudents };
+module.exports = { getdetails };
