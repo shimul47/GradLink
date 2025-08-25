@@ -1,31 +1,38 @@
-import React, { use, useState } from 'react';
-import { Link } from 'react-router';
-import { Eye, EyeOff, Mail, User, Lock, ArrowRight, GraduationCap } from 'lucide-react';
-import { AuthContext } from '../Contexts/AuthContext';
-import { toast } from 'react-toastify';
-import useAxiosSecure from '../Hooks/useAxiosSecure';
+import React, { use, useState } from "react";
+import { Link } from "react-router";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  User,
+  Lock,
+  ArrowRight,
+  GraduationCap,
+} from "lucide-react";
+import { AuthContext } from "../Contexts/AuthContext";
+import { toast } from "react-toastify";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const SignUp = () => {
   const { setUser, updateUser, createUser } = use(AuthContext);
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const axiosSecure = useAxiosSecure()
-
+  const axiosSecure = useAxiosSecure();
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    userType: 'student'
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    userType: "student",
   });
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -36,7 +43,9 @@ const SignUp = () => {
     // Password validation
     const passwordValidation = /(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     if (!passwordValidation.test(formData.password)) {
-      setErrorMessage("Password must contain at least one uppercase, one lowercase letter and be at least 6 characters long.");
+      setErrorMessage(
+        "Password must contain at least one uppercase, one lowercase letter and be at least 6 characters long."
+      );
       return;
     }
     if (formData.password !== formData.confirmPassword) {
@@ -54,29 +63,34 @@ const SignUp = () => {
 
       // Prepare user data for backend
       const userData = {
-        uid: user.uid,
         name: formData.name,
         email: formData.email,
         userType: formData.userType,
-        createdAt: new Date().toISOString(),
+
+        // createdAt: new Date().toISOString(),
+        createdAt: new Date().toISOString().slice(0, 19).replace("T", " "),
       };
+      // console.log(userData.userType);
 
       //. Save user in backend
-      const res = await axiosSecure.post('/users', userData);
+      const res = await axiosSecure.post("/users", userData);
 
       if (res.data.insertedId || res.data.acknowledged) {
         console.log("User saved successfully");
       }
 
       // Update Context
-      setUser({ ...user, displayName: formData.name, userType: formData.userType });
+      setUser({
+        ...user,
+        displayName: formData.name,
+        userType: formData.userType,
+      });
       toast.success("Account created & saved successfully!");
     } catch (error) {
       console.error("Signup Error:", error.message);
       setErrorMessage(error.message);
     }
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-950 to-slate-800">
@@ -134,7 +148,6 @@ const SignUp = () => {
               </div>
             </div>
 
-
             {/* User Type */}
             <div className="form-control">
               <label className="label">
@@ -173,7 +186,11 @@ const SignUp = () => {
                   className="absolute right-3 top-3 text-gray-400"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -199,12 +216,18 @@ const SignUp = () => {
                   className="absolute right-3 top-3 text-gray-400"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
 
-            {errorMessage && <p className='text-red-500 text-sm'>{errorMessage}</p>}
+            {errorMessage && (
+              <p className="text-red-500 text-sm">{errorMessage}</p>
+            )}
 
             {/* Submit Button */}
             <div className="form-control mt-6">
@@ -223,25 +246,46 @@ const SignUp = () => {
             {/* Google Sign In Button */}
             <button
               type="button"
-
               className="btn btn-outline w-full bg-white hover:bg-gray-50"
             >
-              <svg aria-label="Google logo" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="mr-2">
+              <svg
+                aria-label="Google logo"
+                width="20"
+                height="20"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                className="mr-2"
+              >
                 <g>
                   <path d="m0 0H512V512H0" fill="#fff"></path>
-                  <path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path>
-                  <path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path>
-                  <path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path>
-                  <path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"></path>
+                  <path
+                    fill="#34a853"
+                    d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
+                  ></path>
+                  <path
+                    fill="#4285f4"
+                    d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
+                  ></path>
+                  <path
+                    fill="#fbbc02"
+                    d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
+                  ></path>
+                  <path
+                    fill="#ea4335"
+                    d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
+                  ></path>
                 </g>
               </svg>
               Sign up with Google
             </button>
 
             {/* Login Link */}
-            <p className='text-center mt-4'>
-              Already have an account?{' '}
-              <Link to='/login' className='text-blue-500 hover:underline font-semibold'>
+            <p className="text-center mt-4">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-500 hover:underline font-semibold"
+              >
                 Login Now
               </Link>
             </p>
@@ -250,8 +294,9 @@ const SignUp = () => {
           {/* University Notice */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-700 text-center">
-              <strong>Note:</strong> This platform is exclusively for BRAC University students and alumni.
-              Your account will be verified against official university records.
+              <strong>Note:</strong> This platform is exclusively for BRAC
+              University students and alumni. Your account will be verified
+              against official university records.
             </p>
           </div>
         </div>

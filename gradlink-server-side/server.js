@@ -1,37 +1,42 @@
 const express = require("express");
 const mySqlPool = require("./config/db");
-const app = express();
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
-//accept frontend -- middleware
+const app = express();
+
+// Middleware
 app.use(cors());
+app.use(bodyParser.json());
 
-//define port
-if (process.env.NODE_ENV != "production") {
+// Load environment variables
+if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-//checking connection
-app.get("", (req, res) => {
+
+// Health check
+app.get("/", (req, res) => {
   res.send("Page is running");
 });
 
-//routes
+// Routes
 app.use(require("./routes/studentRoutes"));
 app.use(require("./routes/alumniRoutes"));
 app.use(require("./routes/adminRoutes"));
+app.use(require("./routes/userRoutes"));
 
-//
-let PORT = process.env.PORT || 8080;
+// Define port
+const PORT = process.env.PORT || 8080;
 
-//sql db connection
+// SQL DB connection
 mySqlPool
   .query("select 1")
   .then(() => {
     console.log("SQL Connected");
     app.listen(PORT, () => {
-      console.log(`App is listening to port ${PORT}`);
+      console.log(`App is listening on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.log(err);
+    console.error("DB Connection Error:", err);
   });
