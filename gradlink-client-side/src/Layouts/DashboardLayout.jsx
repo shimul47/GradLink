@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import {
   User,
+  MoveLeft,
   Plus,
   Users,
   MessageSquare,
@@ -305,6 +306,10 @@ const DashboardLayout = () => {
 
           {/* Page Content */}
           <div className="max-w-screen-xl mx-auto">
+            <div className='mb-5 text-gray-400 '>
+
+              <Link to={'/'} className='hover:text-white flex items-center gap-2'><MoveLeft className='h-5 w-5' /> Back to Home</Link>
+            </div>
             <Outlet />
           </div>
         </main>
