@@ -1,16 +1,22 @@
-import { useState, useEffect, useContext } from "react";
-import { Lock, Upload, Mail } from "lucide-react";
+import { useState, useEffect, use } from "react";
+import { Lock, Upload, Mail, CloudCog } from "lucide-react";
+// import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { AuthContext } from "../Contexts/AuthContext";
 import useUserType from "../Hooks/useUserType";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 const VerifyUser = () => {
   const [verificationMethod, setVerificationMethod] = useState(null);
+  // const [file, setFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { userType } = useUserType();
+
+  console.log(userType);
+  // const axiosSecure = useAxiosSecure();
   const axiosPublic = useAxiosPublic();
-  const { user } = useContext(AuthContext);
+  // const userType = "student";
+  const { user } = use(AuthContext);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -40,8 +46,8 @@ const VerifyUser = () => {
     setIsSubmitting(true);
 
     try {
+      // Prepare verification data
       const verificationData = {
-        userId: user?.uid, // from Firebase
         userType,
         officialEmail: formData.officialEmail,
         studentId: formData.studentId,
@@ -54,28 +60,90 @@ const VerifyUser = () => {
         }),
       };
 
-      const { data } = await axiosPublic.post("/verify-user", verificationData);
+      // submit verification request
+      const verificationResponse = await axiosPublic.post(
+        "/verify-user",
+        verificationData
+      );
+      if (verificationResponse.data.success) {
+        if (verificationResponse.data.autoVerified) {
+          const userData = {
+            userId: user.uid, // from firebase
+            userType,
+            officialEmail: formData.officialEmail,
+            studentId: formData.studentId,
+            department: formData.department,
+            fullName: formData.fullName,
+            status: "verified",
+            verifiedAt: new Date().toISOString(),
+            ...(userType === "student" && {
+              batchYear: formData.batchYear,
+              enrollmentStatus: "current",
+            }),
+            ...(userType === "alumni" && {
+              graduationYear: formData.graduationYear,
+              company: formData.company || "",
+              currentPosition: "",
+            }),
+          };
 
-      if (data.success) {
-        alert(data.message);
-        // navigate("/dashboard"); // redirect if needed
+          try {
+            // Post to the db collection based on userType
+            let createResponse;
+            if (userType === "student") {
+              createResponse = await axiosSecure.post("/students", userData);
+            } else if (userType === "alumni") {
+              createResponse = await axiosSecure.post("/alumni", userData);
+            }
+
+            if (createResponse.data.success) {
+              alert(
+                `Your ${userType} account has been verified and created successfully!`
+              );
+
+              // navigate('/dashboard');
+            } else {
+              alert("Account creation failed. Please contact support.");
+            }
+          } catch (createError) {
+            console.error("Error creating user record:", createError);
+            alert("Account creation failed. Please contact support.");
+          }
+        } else {
+          // Manual verification required
+          alert(
+            "Your verification request is pending admin approval. You'll be notified once verified."
+          );
+        }
       } else {
-        alert(data.message || "Verification failed. Please try again.");
+        // Handle specific error cases from backend
+        if (verificationResponse.data.status === "verified") {
+          alert(
+            "This student ID is already registered. Please contact support if this is an error."
+          );
+        } else if (verificationResponse.data.status === "pending") {
+          alert(
+            "Your verification request is already pending review. Please wait for approval."
+          );
+        } else {
+          alert(
+            verificationResponse.data.message ||
+              "Submission failed. Please try again."
+          );
+        }
       }
     } catch (error) {
       console.error("Verification error:", error);
-      alert("Something went wrong. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto px-5 lg:px-0 py-16">
+    <div className=" max-w-screen-xl mx-auto px-5 lg:px-0 py-16">
       {/* Verification Methods */}
       {!verificationMethod && (
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Student option */}
           <div
             className={`card cursor-pointer transition-all duration-300 hover:shadow-xl ${
               verificationMethod === "student"
@@ -105,7 +173,6 @@ const VerifyUser = () => {
             </div>
           </div>
 
-          {/* Alumni option */}
           <div
             className={`card cursor-pointer transition-all duration-300 hover:shadow-xl ${
               verificationMethod === "alumni"
@@ -152,8 +219,26 @@ const VerifyUser = () => {
               </button>
             </div>
 
+            <p className="text-gray-400 mb-6">
+              Please provide accurate information to verify your BRACU
+              affiliation.
+            </p>
+
+            {/* User Type Indicator */}
+            {userType && (
+              <div className="alert alert-info mb-6 bg-blue-500/10 border-blue-500/20">
+                <div className="flex items-center">
+                  <span className="text-blue-400">
+                    You are registering as a{" "}
+                    <strong className="text-white capitalize">
+                      {userType}
+                    </strong>
+                  </span>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Full Name & ID */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="form-control">
                   <label className="label">
@@ -161,6 +246,7 @@ const VerifyUser = () => {
                   </label>
                   <input
                     type="text"
+                    placeholder="Enter your full name"
                     className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                     value={formData.fullName}
                     onChange={(e) =>
@@ -177,6 +263,11 @@ const VerifyUser = () => {
                   </label>
                   <input
                     type="text"
+                    placeholder={
+                      userType === "student"
+                        ? "e.g., 20341001"
+                        : "e.g., 20101234"
+                    }
                     className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                     value={formData.studentId}
                     onChange={(e) =>
@@ -187,7 +278,6 @@ const VerifyUser = () => {
                 </div>
               </div>
 
-              {/* Email */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text text-white">
@@ -196,6 +286,11 @@ const VerifyUser = () => {
                 </label>
                 <input
                   type="email"
+                  placeholder={
+                    verificationMethod === "student"
+                      ? "your.name@g.bracu.ac.bd"
+                      : "your.email@example.com"
+                  }
                   className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                   value={formData.officialEmail}
                   onChange={(e) =>
@@ -203,9 +298,13 @@ const VerifyUser = () => {
                   }
                   required
                 />
+                {verificationMethod === "student" && (
+                  <label className="label-text-alt text-blue-400 mt-1">
+                    Please use your official BRACU student email
+                  </label>
+                )}
               </div>
 
-              {/* Department */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text text-white">Department *</span>
@@ -219,17 +318,28 @@ const VerifyUser = () => {
                   required
                 >
                   <option value="">Select your department</option>
-                  <option value="CSE">Computer Science & Engineering</option>
-                  <option value="EEE">
-                    Electrical & Electronic Engineering
+                  <option value="CSE">
+                    Computer Science & Engineering (CSE)
                   </option>
-                  <option value="BBA">Business Administration</option>
+                  <option value="EEE">
+                    Electrical & Electronic Engineering (EEE)
+                  </option>
+                  <option value="ECE">
+                    Electronics & Communication Engineering (ECE)
+                  </option>
+                  <option value="BBA">Business Administration (BBA)</option>
+                  <option value="Economics">Economics</option>
+                  <option value="Architecture">Architecture</option>
+                  <option value="Microbiology">Microbiology</option>
+                  <option value="English">English</option>
                   <option value="Law">Law</option>
+                  <option value="PH">Public Health</option>
+                  <option value="DS">Development Studies</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
 
-              {/* Student fields */}
+              {/* Student-specific fields */}
               {userType === "student" && (
                 <div className="form-control">
                   <label className="label">
@@ -243,7 +353,7 @@ const VerifyUser = () => {
                     }
                     required
                   >
-                    <option value="">Select year</option>
+                    <option value="">Select your batch year</option>
                     {Array.from({ length: 10 }, (_, i) => {
                       const year = new Date().getFullYear() - i;
                       return (
@@ -256,7 +366,7 @@ const VerifyUser = () => {
                 </div>
               )}
 
-              {/* Alumni fields */}
+              {/* Alumni-specific fields */}
               {userType === "alumni" && (
                 <>
                   <div className="form-control">
@@ -276,8 +386,8 @@ const VerifyUser = () => {
                       }
                       required
                     >
-                      <option value="">Select year</option>
-                      {Array.from({ length: 20 }, (_, i) => {
+                      <option value="">Select your graduation year</option>
+                      {Array.from({ length: 22 }, (_, i) => {
                         const year = new Date().getFullYear() - i;
                         return (
                           <option key={year} value={year}>
@@ -287,6 +397,7 @@ const VerifyUser = () => {
                       })}
                     </select>
                   </div>
+
                   <div className="form-control">
                     <label className="label">
                       <span className="label-text text-white">
@@ -295,6 +406,7 @@ const VerifyUser = () => {
                     </label>
                     <input
                       type="text"
+                      placeholder="e.g., Google, Microsoft, etc."
                       className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                       value={formData.company}
                       onChange={(e) =>
@@ -305,31 +417,61 @@ const VerifyUser = () => {
                 </>
               )}
 
-              {/* Agreement */}
+              {/* Student-specific note */}
+              {verificationMethod === "student" && (
+                <div className="alert alert-info bg-blue-500/10 border-blue-500/20">
+                  <div className="flex items-center">
+                    <span className="text-blue-400 text-sm">
+                      Student verification is instant using your BRACU student
+                      ID.
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Alumni-specific note */}
+              {verificationMethod === "alumni" && (
+                <div className="alert alert-warning bg-yellow-500/10 border-yellow-500/20">
+                  <div className="flex items-center">
+                    <span className="text-yellow-400 text-sm">
+                      Alumni verification may take 24-48 hours for manual
+                      review.
+                    </span>
+                  </div>
+                </div>
+              )}
+
               <div className="form-control">
                 <label className="label cursor-pointer justify-start gap-3">
                   <input
                     type="checkbox"
-                    className="checkbox checkbox-primary"
+                    className="checkbox checkbox-primary bg-[#1E293B] border-[#334155] checked:bg-blue-500 checked:border-blue-500"
                     checked={formData.agreed}
                     onChange={(e) =>
                       setFormData({ ...formData, agreed: e.target.checked })
                     }
                     required
                   />
-                  <span className="label-text text-white">
-                    I confirm that the information is correct and belongs to me.
+                  <span className="label-text text-white flex-1 ">
+                    I confirm that the information provided{" "}
+                    <br className="md:hidden" /> is correct and belongs to me.
                   </span>
                 </label>
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
-                className="btn btn-primary w-full bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white"
+                className="btn btn-primary w-full bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white hover:from-blue-600 hover:to-emerald-500 transition-all duration-300"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Verify Me"}
+                {isSubmitting ? (
+                  <>
+                    <span className="loading loading-spinner"></span>
+                    Submitting...
+                  </>
+                ) : (
+                  "Verify Me"
+                )}
               </button>
             </form>
           </div>

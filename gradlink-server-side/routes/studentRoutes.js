@@ -11,6 +11,7 @@ router.get("/studentlist", getStudents);
 router.post("/students", async (req, res) => {
   try {
     const {
+      userId,
       userType,
       officialEmail,
       studentId,
@@ -25,10 +26,11 @@ router.post("/students", async (req, res) => {
     const query = `
       INSERT INTO students 
       (userId, userType, officialEmail, studentId, department, fullName, status, verifiedAt, batchYear, enrollmentStatus)
-      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     await db.execute(query, [
+      userId,
       userType,
       officialEmail,
       studentId,
