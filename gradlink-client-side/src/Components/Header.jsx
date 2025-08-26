@@ -5,7 +5,17 @@ import { Link } from "react-router";
 import { AuthContext } from "../Contexts/AuthContext";
 
 const Header = () => {
-  const { user } = use(AuthContext);
+  const { user, signOutUser } = use(AuthContext);
+
+  const handleSignOut = () => {
+    signOutUser()
+      .then(() => {
+      })
+      .catch(error => {
+        console.log(error.message);
+      })
+  }
+
   return (
     <div className="shadow-sm bg-[#0b111f] text-white backdrop-blur-md fixed z-50 top-0 w-full">
       <div className="max-w-screen-xl mx-auto px-5 lg:px-0 navbar ">
@@ -55,14 +65,34 @@ const Header = () => {
                 <NavLink to={"/verify"}>Verify</NavLink>
               </li>
             )}
+            {user && (
+              <li>
+                <NavLink to={"/dashboard"}>Dashboard</NavLink>
+              </li>
+            )}
           </ul>
         </div>
         <div className="navbar-end">
-          <Link to={"/signup"}>
-            <button className="text-white shadow-none bg-gradient-to-r from-blue-500 to-emerald-400 hover:to-emerald-600 btn border-none rounded-lg font-medium transition-colors duration-200">
-              Sign Up
-            </button>
-          </Link>
+          {
+            user ? <div className='flex items-center gap-3'>
+              <p className='hidden text-lg md:block'>{user?.displayName}</p>
+              <button
+                onClick={handleSignOut}
+                className='text-white shadow-none bg-gradient-to-r from-blue-500 to-emerald-400 hover:to-emerald-600 btn border-none rounded-lg font-medium transition-colors duration-200'
+              >
+                Logout
+              </button>
+            </div> :
+              <div>
+                <Link to={'/login'}><button className='btn shadow-sm border-none shadow-emerald-500 btn-primary bg-black text-white mr-2'>Login</button></Link>
+                <Link to={"/signup"}>
+                  <button className="text-white shadow-none bg-gradient-to-r from-blue-500 to-emerald-400 hover:to-emerald-600 btn border-none rounded-lg font-medium transition-colors duration-200">
+                    Sign Up
+                  </button>
+                </Link>
+              </div>
+          }
+
         </div>
       </div>
     </div>

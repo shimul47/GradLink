@@ -1,6 +1,5 @@
-import { useState, useEffect, use } from "react";
-import { Lock, Upload, Mail, CloudCog } from "lucide-react";
-// import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useState, useEffect, useContext } from "react";
+import { Lock, Upload, Mail } from "lucide-react";
 import { AuthContext } from "../Contexts/AuthContext";
 import useUserType from "../Hooks/useUserType";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
@@ -11,9 +10,6 @@ const VerifyUser = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { userType } = useUserType();
-
-  console.log(userType);
-  // const axiosSecure = useAxiosSecure();
   const axiosPublic = useAxiosPublic();
   // const userType = "student";
   const { user } = use(AuthContext);
@@ -116,21 +112,7 @@ const VerifyUser = () => {
           );
         }
       } else {
-        // Handle specific error cases from backend
-        if (verificationResponse.data.status === "verified") {
-          alert(
-            "This student ID is already registered. Please contact support if this is an error."
-          );
-        } else if (verificationResponse.data.status === "pending") {
-          alert(
-            "Your verification request is already pending review. Please wait for approval."
-          );
-        } else {
-          alert(
-            verificationResponse.data.message ||
-              "Submission failed. Please try again."
-          );
-        }
+        alert(data.message || "Verification failed. Please try again.");
       }
     } catch (error) {
       console.error("Verification error:", error);

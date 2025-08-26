@@ -93,7 +93,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-950 to-slate-800">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-950">
       <div className="card w-full max-w-md shadow-2xl bg-base-100 bg-opacity-90 backdrop-blur-sm z-10">
         <div className="card-body p-8">
           {/* Header */}
@@ -233,7 +233,7 @@ const SignUp = () => {
             <div className="form-control mt-6">
               <button
                 type="submit"
-                className="btn btn-primary bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white hover:from-blue-600 hover:to-emerald-500 transition-all duration-300 group"
+                className="btn w-full btn-primary bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white hover:from-blue-600 hover:to-emerald-500 transition-all duration-300 group"
               >
                 Sign Up
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -243,41 +243,6 @@ const SignUp = () => {
             {/* Divider */}
             <div className="divider text-gray-400 my-2">Or</div>
 
-            {/* Google Sign In Button */}
-            <button
-              type="button"
-              className="btn btn-outline w-full bg-white hover:bg-gray-50"
-            >
-              <svg
-                aria-label="Google logo"
-                width="20"
-                height="20"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                className="mr-2"
-              >
-                <g>
-                  <path d="m0 0H512V512H0" fill="#fff"></path>
-                  <path
-                    fill="#34a853"
-                    d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-                  ></path>
-                  <path
-                    fill="#4285f4"
-                    d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-                  ></path>
-                  <path
-                    fill="#fbbc02"
-                    d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-                  ></path>
-                  <path
-                    fill="#ea4335"
-                    d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-                  ></path>
-                </g>
-              </svg>
-              Sign up with Google
-            </button>
 
             {/* Login Link */}
             <p className="text-center mt-4">
@@ -292,7 +257,7 @@ const SignUp = () => {
           </form>
 
           {/* University Notice */}
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-700 text-center">
               <strong>Note:</strong> This platform is exclusively for BRAC
               University students and alumni. Your account will be verified
