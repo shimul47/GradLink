@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowRight, Users, Briefcase, Network } from "lucide-react";
 import { Link } from "react-router";
+import heroIMG from '.././assets/heroIMG.webp'
 
 const Hero = () => {
   return (
@@ -90,7 +91,7 @@ const Hero = () => {
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-xl" style={{ backgroundColor: "#1E293B", border: "1px solid #334155" }}>
                 <img
-                  src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=600"
+                  src={heroIMG}
                   alt="BRACU students and alumni collaborating"
                   className="w-full h-auto object-cover"
                 />
