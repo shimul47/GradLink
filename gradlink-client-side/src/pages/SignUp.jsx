@@ -1,5 +1,5 @@
 import React, { use, useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   Eye,
   EyeOff,
@@ -20,6 +20,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -86,6 +88,7 @@ const SignUp = () => {
         userType: formData.userType,
       });
       toast.success("Account created & saved successfully!");
+      navigate(location?.state || "/");
     } catch (error) {
       console.error("Signup Error:", error.message);
       setErrorMessage(error.message);
@@ -242,7 +245,6 @@ const SignUp = () => {
 
             {/* Divider */}
             <div className="divider text-gray-400 my-2">Or</div>
-
 
             {/* Login Link */}
             <p className="text-center mt-4">

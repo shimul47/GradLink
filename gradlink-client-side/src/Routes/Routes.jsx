@@ -1,7 +1,4 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import Root from "../pages/Root";
 import Home from "../pages/Home";
 import Error from "../pages/Error";
@@ -26,7 +23,9 @@ import CreateMentorship from "../Dashboard Components/CreateMentorship";
 import Mentorship from "../Dashboard Components/Mentorship";
 import MentorshipRequests from "../Dashboard Components/MentorshipRequests";
 import Recommendations from "../Dashboard Components/Recommendations";
-
+import Users from "../Dashboard Components/Users";
+import UniDatabase from "../Dashboard Components/UniDatabase";
+import PendingVerify from "../Dashboard Components/PendingVerify";
 
 export const router = createBrowserRouter([
   {
@@ -36,104 +35,120 @@ export const router = createBrowserRouter([
 
     children: [
       {
-        path: '/',
+        path: "/",
         Component: Home,
       },
       {
-        path: '/login',
+        path: "/login",
         Component: Login,
       },
       {
-        path: '/signup',
+        path: "/signup",
         Component: SignUp,
       },
       {
-        path: '/about',
+        path: "/about",
         Component: About,
       },
       {
-        path: '/contact',
+        path: "/contact",
         Component: Contact,
       },
       {
-        path: '/verify',
+        path: "/verify",
         Component: Verify,
       },
-
-
-    ]
+    ],
   },
   {
-    path: '/dashboard',
+    path: "/dashboard",
     Component: DashboardLayout,
     children: [
       {
-        path: '/dashboard',
-        Component: DashboardHome
+        path: "/dashboard",
+        Component: DashboardHome,
       },
       {
-        path: '/dashboard/profile',
-        Component: Profile
+        path: "/dashboard/profile",
+        Component: Profile,
       },
       {
-        path: '/dashboard/projects',
-        Component: Projects
+        path: "/dashboard/projects",
+        Component: Projects,
       },
       {
-        path: '/dashboard/projects/create',
-        Component: CreateProject
+        path: "/dashboard/projects/create",
+        Component: CreateProject,
       },
       {
-        path: '/dashboard/projects/collaborations',
-        Component: CollaborationRequest
+        path: "/dashboard/projects/collaborations",
+        Component: CollaborationRequest,
       },
       {
-        path: '/dashboard/jobs',
-        Component: Job
+        path: "/dashboard/jobs",
+        Component: Job,
       },
       {
-        path: '/dashboard/jobs/create',
-        Component: CreateJob
+        path: "/dashboard/jobs/create",
+        Component: CreateJob,
       },
       {
-        path: '/dashboard/jobs/my-job-posts',
-        Component: MyJobPost
+        path: "/dashboard/jobs/my-job-posts",
+        Component: MyJobPost,
       },
       {
-        path: '/dashboard/events',
-        Component: Event
+        path: "/dashboard/events",
+        Component: Event,
       },
       {
-        path: '/dashboard/events/create',
-        Component: CreateEvent
+        path: "/dashboard/events/create",
+        Component: CreateEvent,
       },
 
       {
-        path: '/dashboard/events/my-events',
-        Component: MyEvents
+        path: "/dashboard/events/my-events",
+        Component: MyEvents,
       },
       {
-        path: '/dashboard/mentorship',
-        Component: Mentorship
-
+        path: "/dashboard/mentorship",
+        Component: Mentorship,
       },
       {
-        path: '/dashboard/mentorship/create',
-        Component: CreateMentorship
-
+        path: "/dashboard/mentorship/create",
+        Component: CreateMentorship,
       },
       {
-        path: '/dashboard/mentorship/requests',
-        Component: MentorshipRequests
-
+        path: "/dashboard/mentorship/requests",
+        Component: MentorshipRequests,
       },
       {
-        path: '/dashboard/recommendations',
-        Component: Recommendations
-      }
-
-
-
-    ]
-  }
+        path: "/dashboard/recommendations",
+        Component: Recommendations,
+      },
+      {
+        path: "/dashboard/admin/users",
+        Component: Users,
+      },
+      {
+        path: "/dashboard/admin/university-database",
+        Component: UniDatabase,
+      },
+      {
+        path: "/dashboard/admin/pending-verification",
+        Component: PendingVerify,
+      },
+      {
+        path: "/dashboard/admin/verified-users",
+      },
+      {
+        path: "/dashboard/admin/alumni-list",
+      },
+      {
+        path: "/dashboard/admin/students-list",
+      },
+      {
+        path: "/dashboard/admin/reports",
+      },
+    ],
+  },
 ]);

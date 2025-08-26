@@ -10,6 +10,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import useUserType from "../Hooks/useUserType";
+import useUserStatus from "../Hooks/useUserStatus";
 
 const Contact = () => {
   const contactMethods = [
@@ -58,8 +59,10 @@ const Contact = () => {
         "Verified alumni can create projects from their dashboard. Simply describe your project, set requirements, and students can apply to collaborate with you.",
     },
   ];
-  const userType = useUserType();
-  console.log(userType);
+  // const userType = useUserType();
+  // const { userStatus } = useUserStatus();
+  // console.log("this is status", userStatus);
+  // console.log(userType);
   return (
     <div className="min-h-screen ">
       <main>

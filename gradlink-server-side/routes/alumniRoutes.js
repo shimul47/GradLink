@@ -1,11 +1,35 @@
 const express = require("express");
 const { getAlumni } = require("../controllers/alumniController");
-
+const db = require("../config/db");
 //router obj
 const router = express.Router();
 
 //routes
 router.get("/alumnilist", getAlumni);
+
+//put requst
+router.put("/alumnilist/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { status } = req.body;
+
+    const verifiedAt = status === "verified" ? new Date() : null;
+
+    const [result] = await db.query(
+      "UPDATE alumni SET status = ?, verifiedAt = ? WHERE userId = ?",
+      [status, verifiedAt, userId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Alumni not found" });
+    }
+
+    res.json({ message: "Alumni updated successfully" });
+  } catch (err) {
+    console.error("Error updating alumni:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 //post
 router.post("/alumni", async (req, res) => {
