@@ -2,15 +2,23 @@ import { useState, useEffect, useContext } from "react";
 import { Lock, Upload, Mail } from "lucide-react";
 import { AuthContext } from "../Contexts/AuthContext";
 import useUserType from "../Hooks/useUserType";
+<<<<<<< HEAD
 import useAxiosPublic from "../Hooks/useAxiosPublic";
+=======
+>>>>>>> 22e974b (fixed userType issue)
 
 const VerifyUser = () => {
   const [verificationMethod, setVerificationMethod] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { userType } = useUserType();
+<<<<<<< HEAD
   const axiosPublic = useAxiosPublic();
   const { user } = useContext(AuthContext);
+=======
+  const axiosSecure = useAxiosSecure()
+  const { user } = use(AuthContext)
+>>>>>>> 22e974b (fixed userType issue)
 
   const [formData, setFormData] = useState({
     fullName: "",
