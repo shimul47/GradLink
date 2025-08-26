@@ -63,11 +63,11 @@ const SignUp = () => {
 
       // Prepare user data for backend
       const userData = {
+        userId: user?.uid,
         name: formData.name,
         email: formData.email,
         userType: formData.userType,
 
-        // createdAt: new Date().toISOString(),
         createdAt: new Date().toISOString().slice(0, 19).replace("T", " "),
       };
       // console.log(userData.userType);

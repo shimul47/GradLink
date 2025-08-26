@@ -20,7 +20,7 @@ const useUserType = () => {
     axiosSecure
       .get(`/users/userType/${user.email}`)
       .then((res) => {
-        setUserType(res.data?.role || null);
+        setUserType(res.data?.userType || null);
         setError(null);
       })
       .catch((err) => {
@@ -32,7 +32,7 @@ const useUserType = () => {
       });
   }, [user?.email, axiosSecure]);
 
-  return { userType, isLoading, error };
+  return { userType };
 };
 
 export default useUserType;

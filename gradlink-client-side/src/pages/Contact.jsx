@@ -7,8 +7,9 @@ import {
   MessageSquare,
   Clock,
   Send,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
+import useUserType from "../Hooks/useUserType";
 
 const Contact = () => {
   const contactMethods = [
@@ -17,48 +18,59 @@ const Contact = () => {
       title: "Email Us",
       description: "Get in touch with our team",
       contact: "hello@gradlink.bracu.edu",
-      action: "Send Email"
+      action: "Send Email",
     },
     {
       icon: Phone,
       title: "Call Us",
       description: "Speak directly with support",
       contact: "+880 2 55040101",
-      action: "Call Now"
+      action: "Call Now",
     },
     {
       icon: MapPin,
       title: "Visit Us",
       description: "BRAC University Campus",
       contact: "Merul Badda, Dhaka 1212",
-      action: "Get Directions"
-    }
+      action: "Get Directions",
+    },
   ];
 
   const faqItems = [
     {
       question: "How do I get verified on GradLink?",
-      answer: "Submit your verification request with your BRACU credentials. Our admin team will verify against the official database and approve your account within 24-48 hours."
+      answer:
+        "Submit your verification request with your BRACU credentials. Our admin team will verify against the official database and approve your account within 24-48 hours.",
     },
     {
       question: "Can I join projects as a student?",
-      answer: "Yes! Once verified, students can browse and join projects created by alumni. This is a great way to gain real-world experience and build professional connections."
+      answer:
+        "Yes! Once verified, students can browse and join projects created by alumni. This is a great way to gain real-world experience and build professional connections.",
     },
     {
       question: "Is GradLink free to use?",
-      answer: "Yes, GradLink is completely free for all BRAC University students and alumni. Our platform is built by the community, for the community."
+      answer:
+        "Yes, GradLink is completely free for all BRAC University students and alumni. Our platform is built by the community, for the community.",
     },
     {
       question: "How can alumni create projects?",
-      answer: "Verified alumni can create projects from their dashboard. Simply describe your project, set requirements, and students can apply to collaborate with you."
-    }
+      answer:
+        "Verified alumni can create projects from their dashboard. Simply describe your project, set requirements, and students can apply to collaborate with you.",
+    },
   ];
-
+  const userType = useUserType();
+  console.log(userType);
   return (
     <div className="min-h-screen ">
       <main>
         {/* Hero Section */}
-        <section className="py-20" style={{ background: "linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(30, 41, 59, 0.7) 100%)" }}>
+        <section
+          className="py-20"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(30, 41, 59, 0.7) 100%)",
+          }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
               Get in{" "}
@@ -66,9 +78,13 @@ const Contact = () => {
                 Touch
               </span>
             </h1>
-            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: "#94A3B8" }}>
-              Have questions about GradLink? Need help getting verified? Or want to suggest new features?
-              We'd love to hear from the BRAC University community.
+            <p
+              className="text-xl max-w-3xl mx-auto leading-relaxed"
+              style={{ color: "#94A3B8" }}
+            >
+              Have questions about GradLink? Need help getting verified? Or want
+              to suggest new features? We'd love to hear from the BRAC
+              University community.
             </p>
           </div>
         </section>
@@ -82,13 +98,14 @@ const Contact = () => {
                   key={index}
                   className="card backdrop-blur-md bg-slate-800/50 border border-slate-600/30 shadow-xl transition-all duration-300  
 hover:-translate-y-1 hover:shadow-blue-500/10"
-
                 >
                   <div className="card-body items-center text-center">
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-r from-blue-500 to-emerald-400 " >
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-r from-blue-500 to-emerald-400 ">
                       <method.icon className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="card-title text-xl text-white">{method.title}</h3>
+                    <h3 className="card-title text-xl text-white">
+                      {method.title}
+                    </h3>
                     <p style={{ color: "#94A3B8" }}>{method.description}</p>
                     <div className="space-y-4 mt-4">
                       <p className="text-lg font-semibold text-white">
@@ -107,17 +124,23 @@ hover:-translate-y-1 hover:shadow-blue-500/10"
             {/* Contact Form & Info */}
             <div className="grid lg:grid-cols-2 gap-12">
               {/* Contact Form */}
-              <div className="card backdrop-blur-md bg-opacity-20 border border-opacity-10 shadow-xl" style={{
-                backgroundColor: "rgba(30, 41, 59, 0.5)",
-                borderColor: "rgba(51, 65, 85, 0.3)"
-              }}>
+              <div
+                className="card backdrop-blur-md bg-opacity-20 border border-opacity-10 shadow-xl"
+                style={{
+                  backgroundColor: "rgba(30, 41, 59, 0.5)",
+                  borderColor: "rgba(51, 65, 85, 0.3)",
+                }}
+              >
                 <div className="card-body">
                   <div className="flex items-center space-x-2 mb-4">
                     <MessageSquare className="w-6 h-6 text-blue-500" />
-                    <h2 className="card-title text-2xl text-white">Send us a Message</h2>
+                    <h2 className="card-title text-2xl text-white">
+                      Send us a Message
+                    </h2>
                   </div>
                   <p className="mb-6" style={{ color: "#94A3B8" }}>
-                    Fill out the form below and we'll get back to you within 24 hours
+                    Fill out the form below and we'll get back to you within 24
+                    hours
                   </p>
 
                   <div className="space-y-6">
@@ -160,7 +183,9 @@ hover:-translate-y-1 hover:shadow-blue-500/10"
                         I am a
                       </label>
                       <select className="select select-bordered bg-[#1E293B] w-full border-[#334155] text-white">
-                        <option disabled selected>Select your role</option>
+                        <option disabled selected>
+                          Select your role
+                        </option>
                         <option>Current Student</option>
                         <option>Alumni</option>
                         <option>Faculty Member</option>
@@ -173,7 +198,9 @@ hover:-translate-y-1 hover:shadow-blue-500/10"
                         Subject
                       </label>
                       <select className="select select-bordered bg-[#1E293B] w-full border-[#334155] text-white">
-                        <option disabled selected>What can we help you with?</option>
+                        <option disabled selected>
+                          What can we help you with?
+                        </option>
                         <option>Account Verification</option>
                         <option>Technical Support</option>
                         <option>Feature Request</option>
@@ -205,29 +232,41 @@ hover:-translate-y-1 hover:shadow-blue-500/10"
               {/* Additional Info */}
               <div className="space-y-8">
                 {/* Office Hours */}
-                <div className="card backdrop-blur-md bg-opacity-20 border border-opacity-10 shadow-xl" style={{
-                  backgroundColor: "rgba(30, 41, 59, 0.5)",
-                  borderColor: "rgba(51, 65, 85, 0.3)"
-                }}>
+                <div
+                  className="card backdrop-blur-md bg-opacity-20 border border-opacity-10 shadow-xl"
+                  style={{
+                    backgroundColor: "rgba(30, 41, 59, 0.5)",
+                    borderColor: "rgba(51, 65, 85, 0.3)",
+                  }}
+                >
                   <div className="card-body">
                     <div className="flex items-center space-x-2">
                       <Clock className="w-6 h-6 text-blue-500" />
-                      <h3 className="card-title text-xl text-white">Support Hours</h3>
+                      <h3 className="card-title text-xl text-white">
+                        Support Hours
+                      </h3>
                     </div>
                     <div className="space-y-3 mt-4">
                       <div className="flex justify-between">
                         <span className="text-white">Monday - Friday</span>
-                        <span className="font-semibold text-white">9:00 AM - 6:00 PM</span>
+                        <span className="font-semibold text-white">
+                          9:00 AM - 6:00 PM
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-white">Saturday</span>
-                        <span className="font-semibold text-white">10:00 AM - 4:00 PM</span>
+                        <span className="font-semibold text-white">
+                          10:00 AM - 4:00 PM
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-white">Sunday</span>
                         <span style={{ color: "#94A3B8" }}>Closed</span>
                       </div>
-                      <div className="pt-2 text-sm" style={{ color: "#94A3B8" }}>
+                      <div
+                        className="pt-2 text-sm"
+                        style={{ color: "#94A3B8" }}
+                      >
                         All times are Bangladesh Standard Time (BST)
                       </div>
                     </div>
@@ -235,32 +274,49 @@ hover:-translate-y-1 hover:shadow-blue-500/10"
                 </div>
 
                 {/* Response Time */}
-                <div className="card backdrop-blur-md bg-opacity-20 border border-opacity-10 shadow-xl" style={{
-                  backgroundColor: "rgba(30, 41, 59, 0.5)",
-                  borderColor: "rgba(51, 65, 85, 0.3)"
-                }}>
+                <div
+                  className="card backdrop-blur-md bg-opacity-20 border border-opacity-10 shadow-xl"
+                  style={{
+                    backgroundColor: "rgba(30, 41, 59, 0.5)",
+                    borderColor: "rgba(51, 65, 85, 0.3)",
+                  }}
+                >
                   <div className="card-body">
-                    <h3 className="card-title text-xl text-white">Response Time</h3>
+                    <h3 className="card-title text-xl text-white">
+                      Response Time
+                    </h3>
                     <div className="space-y-3 mt-4">
                       <div className="flex items-center space-x-3">
                         <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
                         <div>
-                          <div className="font-semibold text-white">General Inquiries</div>
-                          <div className="text-sm" style={{ color: "#94A3B8" }}>Within 24 hours</div>
+                          <div className="font-semibold text-white">
+                            General Inquiries
+                          </div>
+                          <div className="text-sm" style={{ color: "#94A3B8" }}>
+                            Within 24 hours
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center space-x-3">
                         <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                         <div>
-                          <div className="font-semibold text-white">Verification Requests</div>
-                          <div className="text-sm" style={{ color: "#94A3B8" }}>24-48 hours</div>
+                          <div className="font-semibold text-white">
+                            Verification Requests
+                          </div>
+                          <div className="text-sm" style={{ color: "#94A3B8" }}>
+                            24-48 hours
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center space-x-3">
                         <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                         <div>
-                          <div className="font-semibold text-white">Technical Issues</div>
-                          <div className="text-sm" style={{ color: "#94A3B8" }}>Within 12 hours</div>
+                          <div className="font-semibold text-white">
+                            Technical Issues
+                          </div>
+                          <div className="text-sm" style={{ color: "#94A3B8" }}>
+                            Within 12 hours
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -272,13 +328,19 @@ hover:-translate-y-1 hover:shadow-blue-500/10"
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20" style={{ backgroundColor: "rgba(15, 23, 42, 0.3)" }}>
+        <section
+          className="py-20"
+          style={{ backgroundColor: "rgba(15, 23, 42, 0.3)" }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
                 Frequently Asked Questions
               </h2>
-              <p className="text-lg max-w-2xl mx-auto" style={{ color: "#94A3B8" }}>
+              <p
+                className="text-lg max-w-2xl mx-auto"
+                style={{ color: "#94A3B8" }}
+              >
                 Quick answers to common questions about GradLink
               </p>
             </div>
@@ -290,11 +352,13 @@ hover:-translate-y-1 hover:shadow-blue-500/10"
                   className="card backdrop-blur-md bg-opacity-20 border border-opacity-10 shadow-xl"
                   style={{
                     backgroundColor: "rgba(30, 41, 59, 0.5)",
-                    borderColor: "rgba(51, 65, 85, 0.3)"
+                    borderColor: "rgba(51, 65, 85, 0.3)",
                   }}
                 >
                   <div className="card-body">
-                    <h3 className="card-title text-lg text-white">{faq.question}</h3>
+                    <h3 className="card-title text-lg text-white">
+                      {faq.question}
+                    </h3>
                     <p className="leading-relaxed" style={{ color: "#94A3B8" }}>
                       {faq.answer}
                     </p>
