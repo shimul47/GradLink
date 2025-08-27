@@ -58,17 +58,17 @@ const About = () => {
 
   const milestones = [
     {
-      year: "2024",
+      year: "2025",
       title: "Platform Launch",
       description: "GradLink beta launched exclusively for BRAC University community"
     },
     {
-      year: "2024",
+      year: "2025",
       title: "500+ Members",
       description: "Reached milestone of 500 verified students and alumni on the platform"
     },
     {
-      year: "2024",
+      year: "2025",
       title: "50+ Projects",
       description: "Facilitated over 50 collaborative projects between students and alumni"
     }
