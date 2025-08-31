@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import {
   User,
   MoveLeft,
@@ -20,7 +20,7 @@ import {
   Clock,
   AlertCircle,
 } from "lucide-react";
-import useUserType from "../Hooks/useUserType";
+// import useUserType from "../Hooks/useUserType";
 import { use } from "react";
 import { AuthContext } from "../Contexts/AuthContext";
 
@@ -29,7 +29,8 @@ const DashboardLayout = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const location = useLocation();
   const navigate = useNavigate();
-  const { userType } = useUserType();
+  // const { userType } = useUserType();
+  const userType = 'alumni'
 
   const { user, signOutUser, loading } = use(AuthContext);
 
@@ -50,15 +51,13 @@ const DashboardLayout = () => {
 
   // Navigation link classes with active state
   const linkClasses = ({ isActive }) =>
-    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-      isActive
-        ? "bg-gradient-to-r from-blue-500 to-emerald-400 text-white"
-        : "text-gray-400 hover:bg-[#334155] hover:text-white"
+    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+      ? "bg-gradient-to-r from-blue-500 to-emerald-400 text-white"
+      : "text-gray-400 hover:bg-[#334155] hover:text-white"
     }`;
 
   const subLinkClasses = ({ isActive }) =>
-    `block p-2 text-sm transition-colors ${
-      isActive ? "text-blue-400 font-medium" : "text-gray-400 hover:text-white"
+    `block p-2 text-sm transition-colors ${isActive ? "text-blue-400 font-medium" : "text-gray-400 hover:text-white"
     }`;
 
   // Handle logout
@@ -72,12 +71,12 @@ const DashboardLayout = () => {
       });
   };
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) {
-      navigate("/");
-    }
-  }, [user, loading, navigate]);
+  // useEffect(() => {
+  //   if (loading) return;
+  //   if (!user) {
+  //     navigate("/");
+  //   }
+  // }, [user, loading, navigate]);
 
   if (loading) {
     return loading;
