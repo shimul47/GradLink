@@ -30,10 +30,10 @@ const UniDatabase = () => {
     );
 
   return (
-    <div className="overflow-x-auto p-6">
-      <table className="table table-zebra w-full">
+    <div className="overflow-x-auto  p-6">
+      <table className="table w-full">
         <thead>
-          <tr>
+          <tr className="border">
             <th>#</th>
             <th>Student ID</th>
             <th>Name</th>
@@ -45,7 +45,7 @@ const UniDatabase = () => {
         <tbody>
           {users.length > 0 ? (
             users.map((user, index) => (
-              <tr key={user.studentID}>
+              <tr className="border-b border-white" key={user.studentID}>
                 <th>{index + 1}</th>
                 <td>{user.studentID}</td>
                 <td>{user.name}</td>

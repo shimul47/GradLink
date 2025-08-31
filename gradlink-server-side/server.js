@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-// Health check
+// check
 app.get("/", (req, res) => {
   res.send("Page is running");
 });

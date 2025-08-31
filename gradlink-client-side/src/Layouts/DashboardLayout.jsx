@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import {
   User,
   MoveLeft,
@@ -338,7 +338,7 @@ const DashboardLayout = () => {
 
           {/* Page Content */}
           <div className="max-w-screen-xl mx-auto">
-            <div className="mb-5 text-gray-400 ">
+            <div className="mb-5 w-32 text-gray-400 ">
               <Link
                 to={"/"}
                 className="hover:text-white flex items-center gap-2"

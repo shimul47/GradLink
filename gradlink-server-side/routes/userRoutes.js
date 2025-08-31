@@ -83,7 +83,7 @@ router.post("/verify-user", async (req, res) => {
         .json({ success: false, message: "Missing required fields" });
     }
 
-    // Check if user already exists in students/alumni
+    // Check existance in students/alumni
     const tableName = userType === "student" ? "students" : "alumni";
     const [existingRows] = await mySqlPool.execute(
       `SELECT status FROM ${tableName} WHERE studentId = ?`,
@@ -127,7 +127,7 @@ router.post("/verify-user", async (req, res) => {
           status,
           verifiedAt,
           batchYear,
-          "current",
+          "current", //counting all current students as CURRENT student
         ]
       );
     } else if (userType === "alumni") {

@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { AuthContext } from "../Contexts/AuthContext";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import { use } from "react";
+import { useNavigate } from "react-router";
 
 const VerifyUser = () => {
   const { user } = use(AuthContext);
   const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -44,6 +46,7 @@ const VerifyUser = () => {
 
       alert(response.data.message);
       setIsSubmitted(true); // mark form as submitted
+      navigate("/");
     } catch (err) {
       console.error(err);
       alert("Submission failed. Please try again.");

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { toast } from "react-toastify";
 
 const PendingVerify = () => {
   const axios = useAxiosSecure();
@@ -38,9 +39,10 @@ const PendingVerify = () => {
 
       // Update locally
       setPendingUsers((prev) => prev.filter((u) => u.userId !== user.userId));
+      toast.success("Account Verified Successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to verify user");
+      toast.error("Failed to verify user");
     }
   };
 
@@ -69,7 +71,7 @@ const PendingVerify = () => {
       <h2 className="text-2xl text-white mb-4">
         Pending Verification Requests
       </h2>
-      <table className="table table-zebra w-full">
+      <table className="table  w-full">
         <thead>
           <tr>
             <th>#</th>
@@ -86,7 +88,7 @@ const PendingVerify = () => {
         <tbody>
           {pendingUsers.length > 0 ? (
             pendingUsers.map((user, index) => (
-              <tr key={user.userId}>
+              <tr className="border-b border-white" key={user.userId}>
                 <th>{index + 1}</th>
                 <td>{user.userType}</td>
                 <td>{user.fullName}</td>
