@@ -7,6 +7,17 @@ const router = express.Router();
 //routes
 router.get("/alumnilist", getAlumni);
 
+//for profile
+router.get("/alumnilist/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const [rows] = await db.query("SELECT * FROM alumni WHERE userId = ?", [
+    userId,
+  ]);
+  if (!rows.length)
+    return res.status(404).json({ message: "Alumni not found" });
+  res.json(rows[0]);
+});
+
 //put requst
 router.put("/alumnilist/:userId", async (req, res) => {
   try {
@@ -18,6 +29,31 @@ router.put("/alumnilist/:userId", async (req, res) => {
     const [result] = await db.query(
       "UPDATE alumni SET status = ?, verifiedAt = ? WHERE userId = ?",
       [status, verifiedAt, userId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Alumni not found" });
+    }
+
+    res.json({ message: "Alumni updated successfully" });
+  } catch (err) {
+    console.error("Error updating alumni:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//udate-info
+router.put("/alumni/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { fullName, department, graduationYear, company, currentPosition } =
+      req.body;
+
+    const [result] = await db.query(
+      `UPDATE alumni
+       SET fullName = ?, department = ?, graduationYear = ?, company = ?, currentPosition = ?
+       WHERE userId = ?`,
+      [fullName, department, graduationYear, company, currentPosition, userId]
     );
 
     if (result.affectedRows === 0) {

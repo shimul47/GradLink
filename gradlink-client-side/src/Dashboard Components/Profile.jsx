@@ -1,54 +1,99 @@
-import React, { useState } from 'react';
-import { Edit, Save, X, Mail, User, BookOpen, Briefcase, Calendar, CheckCircle, Clock } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import {
+  Edit,
+  Save,
+  X,
+  Mail,
+  User,
+  BookOpen,
+  Briefcase,
+  Calendar,
+  CheckCircle,
+  Clock,
+} from "lucide-react";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { use } from "react";
+import { AuthContext } from "../Contexts/AuthContext";
 
 const Profile = () => {
+  const axiosSecure = useAxiosSecure();
+  const { user } = use(AuthContext);
+
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    userId: "alu_001",
-    userType: "alumni",
-    officialEmail: "sarah.islam@example.com",
-    studentId: "20151234",
-    department: "CSE",
-    fullName: "Sarah Islam",
-    status: "verified",
-    verifiedAt: "2023-12-20T09:15:00.000Z",
-    graduationYear: 2019,
-    company: "Google Bangladesh",
-    currentPosition: "Senior Software Engineer"
-  });
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUser = async () => {
+      try {
+        const userId = user.uid;
+
+        //student
+        try {
+          const { data } = await axiosSecure.get(`/studentlist/${userId}`);
+          setUserData(data);
+        } catch (errStudent) {
+          //alumni
+          const { data } = await axiosSecure.get(`/alumnilist/${userId}`);
+          setUserData(data);
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [user, axiosSecure]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserData(prev => ({
+    setUserData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSave = () => {
-    console.log("Saving data:", userData);
-    setIsEditing(false);
-    //  API call to update the user data
+  const handleSave = async () => {
+    try {
+      const route =
+        userData.userType === "student"
+          ? `/student/${userData.userId}`
+          : `/alumni/${userData.userId}`;
+      await axiosSecure.put(route, userData);
+      setIsEditing(false);
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Error updating user data:", err);
+      alert("Failed to update profile.");
+    }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    // Optionally reset form data here
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
+  if (loading) return <p className="text-white">Loading profile...</p>;
+  if (!userData) return <p className="text-red-500">User not found!</p>;
+
   return (
     <div className="max-w-screen-xl mx-auto px-5 lg:px-0 space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl md:text-3xl font-bold text-white">Profile Information</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-white">
+          Profile Information
+        </h1>
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
@@ -59,33 +104,33 @@ const Profile = () => {
           </button>
         ) : (
           <div className="flex gap-2">
-            <button
-              onClick={handleSave}
-              className="btn btn-success text-white"
-            >
+            <button onClick={handleSave} className="btn btn-success text-white">
               <Save className="w-4 h-4 mr-2" />
               Save Changes
             </button>
-            <button
-              onClick={handleCancel}
-              className="btn btn-error text-white"
-            >
+            <button onClick={handleCancel} className="btn btn-error text-white">
               <X className="w-4 h-4 mr-2" />
               Cancel
             </button>
           </div>
         )}
       </div>
-
-      {/* Status Badge */}
       <div className="flex items-center gap-2 p-4 bg-[#1E293B] rounded-lg">
-        {userData.status === 'verified' ? (
+        {userData.status === "verified" ? (
           <CheckCircle className="w-5 h-5 text-emerald-400" />
         ) : (
           <Clock className="w-5 h-5 text-amber-400" />
         )}
-        <span className={`font-semibold ${userData.status === 'verified' ? 'text-emerald-400' : 'text-amber-400'}`}>
-          {userData.status === 'verified' ? 'Verified Account' : 'Pending Verification'}
+        <span
+          className={`font-semibold ${
+            userData.status === "verified"
+              ? "text-emerald-400"
+              : "text-amber-400"
+          }`}
+        >
+          {userData.status === "verified"
+            ? "Verified Account"
+            : "Pending Verification"}
         </span>
         {userData.verifiedAt && (
           <span className="text-gray-400 text-sm ml-2">
@@ -94,9 +139,7 @@ const Profile = () => {
         )}
       </div>
 
-      {/* Profile Form */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Personal Information Card */}
         <div className="card bg-[#1E293B] border border-[#334155]">
           <div className="card-body">
             <h2 className="card-title text-white flex items-center gap-2">
@@ -142,7 +185,6 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Academic Information Card */}
         <div className="card bg-[#1E293B] border border-[#334155]">
           <div className="card-body">
             <h2 className="card-title text-white flex items-center gap-2">
@@ -163,7 +205,9 @@ const Profile = () => {
                     className="select select-bordered bg-[#0F172A] border-[#334155] text-white"
                   >
                     <option value="CSE">Computer Science & Engineering</option>
-                    <option value="EEE">Electrical & Electronic Engineering</option>
+                    <option value="EEE">
+                      Electrical & Electronic Engineering
+                    </option>
                     <option value="BBA">Business Administration</option>
                     <option value="Economics">Economics</option>
                     <option value="Architecture">Architecture</option>
@@ -173,7 +217,7 @@ const Profile = () => {
                 )}
               </div>
 
-              {userData.userType === 'student' && (
+              {userData.userType === "student" && (
                 <>
                   <div className="form-control">
                     <label className="label">
@@ -194,7 +238,9 @@ const Profile = () => {
 
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text text-white">Enrollment Status</span>
+                      <span className="label-text text-white">
+                        Enrollment Status
+                      </span>
                     </label>
                     {isEditing ? (
                       <select
@@ -208,17 +254,21 @@ const Profile = () => {
                         <option value="graduated">Graduated</option>
                       </select>
                     ) : (
-                      <p className="text-gray-300 capitalize">{userData.enrollmentStatus}</p>
+                      <p className="text-gray-300 capitalize">
+                        {userData.enrollmentStatus}
+                      </p>
                     )}
                   </div>
                 </>
               )}
 
-              {userData.userType === 'alumni' && (
+              {userData.userType === "alumni" && (
                 <>
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text text-white">Graduation Year</span>
+                      <span className="label-text text-white">
+                        Graduation Year
+                      </span>
                     </label>
                     {isEditing ? (
                       <input
@@ -249,13 +299,17 @@ const Profile = () => {
                         className="input input-bordered bg-[#0F172A] border-[#334155] text-white"
                       />
                     ) : (
-                      <p className="text-gray-300">{userData.company || 'Not specified'}</p>
+                      <p className="text-gray-300">
+                        {userData.company || "Not specified"}
+                      </p>
                     )}
                   </div>
 
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text text-white">Current Position</span>
+                      <span className="label-text text-white">
+                        Current Position
+                      </span>
                     </label>
                     {isEditing ? (
                       <input
@@ -266,7 +320,9 @@ const Profile = () => {
                         className="input input-bordered bg-[#0F172A] border-[#334155] text-white"
                       />
                     ) : (
-                      <p className="text-gray-300">{userData.currentPosition || 'Not specified'}</p>
+                      <p className="text-gray-300">
+                        {userData.currentPosition || "Not specified"}
+                      </p>
                     )}
                   </div>
                 </>
@@ -275,9 +331,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-
-      {/* Additional Information for Students */}
-      {userData.userType === 'student' && (
+      {userData.userType === "student" && (
         <div className="card bg-[#1E293B] border border-[#334155]">
           <div className="card-body">
             <h2 className="card-title text-white flex items-center gap-2">
@@ -293,7 +347,9 @@ const Profile = () => {
               </div>
               <div>
                 <label className="label">
-                  <span className="label-text text-white">Expected Graduation</span>
+                  <span className="label-text text-white">
+                    Expected Graduation
+                  </span>
                 </label>
                 <p className="text-gray-300">June 2027</p>
               </div>
