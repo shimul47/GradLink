@@ -26,6 +26,7 @@ import Recommendations from "../Dashboard Components/Recommendations";
 import Users from "../Dashboard Components/Users";
 import UniDatabase from "../Dashboard Components/UniDatabase";
 import PendingVerify from "../Dashboard Components/PendingVerify";
+import ProjectsDashboard from "../Dashboard Components/ProjectsDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -74,7 +75,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/projects",
-        Component: Projects,
+        Component: ProjectsDashboard,
       },
       {
         path: "/dashboard/projects/create",

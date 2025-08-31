@@ -19,6 +19,7 @@ const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,6 +42,7 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setErrorMessage("");
+    setIsSigningUp(true);
 
     // Password validation
     const passwordValidation = /(?=.*[a-z])(?=.*[A-Z]).{6,}/;
@@ -48,10 +50,12 @@ const SignUp = () => {
       setErrorMessage(
         "Password must contain at least one uppercase, one lowercase letter and be at least 6 characters long."
       );
+      setIsSigningUp(false);
       return;
     }
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage("Passwords do not match.");
+      setIsSigningUp(false); // Stop loading
       return;
     }
 
@@ -60,7 +64,7 @@ const SignUp = () => {
       const result = await createUser(formData.email, formData.password);
       const user = result.user;
 
-      //  Update Firebase profile
+      // Update Firebase profile
       await updateUser({ displayName: formData.name });
 
       // Prepare user data for backend
@@ -69,12 +73,10 @@ const SignUp = () => {
         name: formData.name,
         email: formData.email,
         userType: formData.userType,
-
         createdAt: new Date().toISOString().slice(0, 19).replace("T", " "),
       };
-      // console.log(userData.userType);
 
-      //. Save user in backend
+      // Save user in backend
       const res = await axiosSecure.post("/users", userData);
 
       if (res.data.insertedId || res.data.acknowledged) {
@@ -92,6 +94,8 @@ const SignUp = () => {
     } catch (error) {
       console.error("Signup Error:", error.message);
       setErrorMessage(error.message);
+    } finally {
+      setIsSigningUp(false);
     }
   };
 
@@ -128,6 +132,7 @@ const SignUp = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  disabled={isSigningUp} // Disable during signup
                 />
               </div>
             </div>
@@ -147,6 +152,7 @@ const SignUp = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={isSigningUp} // Disable during signup
                 />
               </div>
             </div>
@@ -162,6 +168,7 @@ const SignUp = () => {
                 value={formData.userType}
                 onChange={handleChange}
                 required
+                disabled={isSigningUp}
               >
                 <option value="student">Current Student</option>
                 <option value="alumni">Alumni</option>
@@ -183,11 +190,13 @@ const SignUp = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  disabled={isSigningUp}
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-3 text-gray-400"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={isSigningUp}
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -213,11 +222,13 @@ const SignUp = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
+                  disabled={isSigningUp}
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-3 text-gray-400"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  disabled={isSigningUp}
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -237,9 +248,19 @@ const SignUp = () => {
               <button
                 type="submit"
                 className="btn w-full btn-primary bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white hover:from-blue-600 hover:to-emerald-500 transition-all duration-300 group"
+                disabled={isSigningUp}
               >
-                Sign Up
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                {isSigningUp ? (
+                  <>
+                    <span className="loading loading-spinner loading-sm"></span>
+                    Signing Up...
+                  </>
+                ) : (
+                  <>
+                    Sign Up
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
               </button>
             </div>
 
