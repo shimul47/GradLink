@@ -24,6 +24,7 @@ app.use(require("./routes/studentRoutes"));
 app.use(require("./routes/alumniRoutes"));
 app.use(require("./routes/adminRoutes"));
 app.use(require("./routes/userRoutes"));
+app.use(require("./routes/projectRoutes"));
 
 // Define port
 const PORT = process.env.PORT || 8080;

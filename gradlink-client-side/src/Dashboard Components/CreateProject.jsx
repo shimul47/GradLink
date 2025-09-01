@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import React, { useState } from "react";
+import { use } from "react";
+import { AuthContext } from "../Contexts/AuthContext";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { Link, useNavigate } from "react-router";
 import {
   ArrowLeft,
   Plus,
@@ -9,59 +12,58 @@ import {
   Tag,
   Clock,
   BookOpen,
-  Upload,
-  Save
-} from 'lucide-react';
+  Save,
+} from "lucide-react";
 
 const CreateProject = () => {
+  const { user } = use(AuthContext);
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [technologies, setTechnologies] = useState([]);
-  const [newTech, setNewTech] = useState('');
+  const [newTech, setNewTech] = useState("");
 
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    status: 'planning',
-    startDate: '',
-    endDate: '',
-    maxMembers: '',
-    requirements: '',
-    learningOutcomes: '',
-    resources: '',
-    image: null
+    title: "",
+    description: "",
+    category: "",
+    status: "planning",
+    startDate: "",
+    endDate: "",
+    maxMembers: "",
+    requirements: "",
+    learningOutcomes: "",
+    resources: "",
+    image: null,
   });
 
   const categories = [
-    'Software Development',
-    'Web Development',
-    'Mobile Development',
-    'Data Science',
-    'Machine Learning',
-    'Research',
-    'Design',
-    'Business',
-    'Other'
+    "Software Development",
+    "Web Development",
+    "Mobile Development",
+    "Data Science",
+    "Machine Learning",
+    "Research",
+    "Design",
+    "Business",
+    "Other",
   ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddTechnology = () => {
     if (newTech.trim() && !technologies.includes(newTech.trim())) {
-      setTechnologies(prev => [...prev, newTech.trim()]);
-      setNewTech('');
+      setTechnologies((prev) => [...prev, newTech.trim()]);
+      setNewTech("");
     }
   };
 
   const handleRemoveTechnology = (techToRemove) => {
-    setTechnologies(prev => prev.filter(tech => tech !== techToRemove));
+    setTechnologies((prev) => prev.filter((tech) => tech !== techToRemove));
   };
 
   const handleSubmit = async (e) => {
@@ -69,39 +71,28 @@ const CreateProject = () => {
     setIsSubmitting(true);
 
     try {
-      // Prepare project data
+      if (!user?.uid)
+        throw new Error("You must be logged in to create a project");
+
       const projectData = {
         ...formData,
-        technologies,
-        createdAt: new Date().toISOString(),
-        createdBy: 'current-user-id' // This would come from your auth context
+        techStacks: technologies,
+        userId: user.uid,
       };
 
-      // Here you would make your API call to create the project
-      console.log('Creating project:', projectData);
+      const res = await axiosSecure.post("/projects", projectData);
 
-      // Simulate API call
-      setTimeout(() => {
-        setIsSubmitting(false);
-        // Show success message and redirect
-        alert('Project created successfully!');
-        navigate('/dashboard/projects');
-      }, 2000);
-
-    } catch (error) {
-      console.error('Error creating project:', error);
+      if (res.status === 201) {
+        alert("Project created successfully!");
+        navigate("/dashboard/projects");
+      } else {
+        throw new Error("Failed to create project");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || err.message);
+    } finally {
       setIsSubmitting(false);
-      alert('Failed to create project. Please try again.');
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData(prev => ({
-        ...prev,
-        image: file
-      }));
     }
   };
 
@@ -117,21 +108,24 @@ const CreateProject = () => {
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-white">Create New Project</h1>
-            <p className="text-gray-400 mt-1">Start a new project and invite collaborators</p>
+            <h1 className="text-3xl font-bold text-white">
+              Create New Project
+            </h1>
+            <p className="text-gray-400 mt-1">
+              Start a new project and invite collaborators
+            </p>
           </div>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Information Card */}
+        {/* Basic Info */}
         <div className="card bg-[#1E293B] border border-[#334155]">
           <div className="card-body">
             <h2 className="card-title text-white flex items-center gap-2">
               <BookOpen className="w-5 h-5" />
               Basic Information
             </h2>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-control">
                 <label className="label">
@@ -160,8 +154,10 @@ const CreateProject = () => {
                   required
                 >
                   <option value="">Select category</option>
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -183,14 +179,13 @@ const CreateProject = () => {
           </div>
         </div>
 
-        {/* Timeline Card */}
+        {/* Timeline */}
         <div className="card bg-[#1E293B] border border-[#334155]">
           <div className="card-body">
             <h2 className="card-title text-white flex items-center gap-2">
               <Calendar className="w-5 h-5" />
               Timeline
             </h2>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-control">
                 <label className="label">
@@ -207,7 +202,9 @@ const CreateProject = () => {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-white">Expected End Date</span>
+                  <span className="label-text text-white">
+                    Expected End Date
+                  </span>
                 </label>
                 <input
                   type="date"
@@ -255,7 +252,7 @@ const CreateProject = () => {
           </div>
         </div>
 
-        {/* Technologies Card */}
+        {/* Technologies */}
         <div className="card bg-[#1E293B] border border-[#334155]">
           <div className="card-body">
             <h2 className="card-title text-white flex items-center gap-2">
@@ -265,7 +262,9 @@ const CreateProject = () => {
 
             <div className="form-control">
               <label className="label">
-                <span className="label-text text-white">Required Technologies</span>
+                <span className="label-text text-white">
+                  Required Technologies
+                </span>
               </label>
               <div className="flex gap-2 mb-3">
                 <input
@@ -274,22 +273,27 @@ const CreateProject = () => {
                   onChange={(e) => setNewTech(e.target.value)}
                   className="input input-bordered bg-[#0F172A] border-[#334155] text-white flex-1"
                   placeholder="Add technology (e.g., React, Python)"
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTechnology())}
+                  onKeyPress={(e) =>
+                    e.key === "Enter" &&
+                    (e.preventDefault(), handleAddTechnology())
+                  }
                 />
                 <button
                   type="button"
                   onClick={handleAddTechnology}
                   className="btn btn-primary bg-gradient-to-r from-blue-500 to-emerald-400 border-none"
                 >
-                  <Plus className="w-4 h-4" />
-                  Add
+                  <Plus className="w-4 h-4" /> Add
                 </button>
               </div>
 
               {technologies.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {technologies.map((tech, index) => (
-                    <span key={index} className="badge badge-primary badge-lg gap-1">
+                    <span
+                      key={index}
+                      className="badge badge-primary badge-lg gap-1"
+                    >
                       {tech}
                       <button
                         type="button"
@@ -306,58 +310,7 @@ const CreateProject = () => {
           </div>
         </div>
 
-        {/* Additional Information Card */}
-        <div className="card bg-[#1E293B] border border-[#334155]">
-          <div className="card-body">
-            <h2 className="card-title text-white flex items-center gap-2">
-              <Clock className="w-5 h-5" />
-              Additional Information
-            </h2>
-
-            <div className="space-y-4">
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-white">Requirements & Prerequisites</span>
-                </label>
-                <textarea
-                  name="requirements"
-                  value={formData.requirements}
-                  onChange={handleInputChange}
-                  className="textarea textarea-bordered bg-[#0F172A] border-[#334155] text-white h-24"
-                  placeholder="What skills or knowledge should collaborators have?"
-                />
-              </div>
-
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-white">Learning Outcomes</span>
-                </label>
-                <textarea
-                  name="learningOutcomes"
-                  value={formData.learningOutcomes}
-                  onChange={handleInputChange}
-                  className="textarea textarea-bordered bg-[#0F172A] border-[#334155] text-white h-24"
-                  placeholder="What will participants learn from this project?"
-                />
-              </div>
-
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-white">Resources & Materials</span>
-                </label>
-                <textarea
-                  name="resources"
-                  value={formData.resources}
-                  onChange={handleInputChange}
-                  className="textarea textarea-bordered bg-[#0F172A] border-[#334155] text-white h-24"
-                  placeholder="What resources will be provided? (docs, datasets, tools, etc.)"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Submit Button */}
+        {/* Submit */}
         <div className="flex gap-4 justify-end">
           <Link
             to="/dashboard/projects"
@@ -371,14 +324,10 @@ const CreateProject = () => {
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              <>
-                <span className="loading loading-spinner"></span>
-                Creating Project...
-              </>
+              "Creating Project..."
             ) : (
               <>
-                <Save className="w-5 h-5 mr-2" />
-                Create Project
+                <Save className="w-5 h-5 mr-2" /> Create Project
               </>
             )}
           </button>
