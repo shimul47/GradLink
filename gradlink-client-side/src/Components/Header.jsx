@@ -10,7 +10,7 @@ const Header = () => {
 
   const handleSignOut = () => {
     signOutUser()
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.log(error.message);
       });
@@ -65,6 +65,11 @@ const Header = () => {
             {userStatus != "verified" && user && (
               <li>
                 <NavLink to={"/verify"}>Verify</NavLink>
+              </li>
+            )}
+            {userStatus == "verified" && user && (
+              <li>
+                <NavLink to={"/allprojects"}>All Projects</NavLink>
               </li>
             )}
             {userStatus == "verified" && user && (
