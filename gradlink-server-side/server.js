@@ -26,7 +26,8 @@ app.use(require("./routes/adminRoutes"));
 app.use(require("./routes/userRoutes"));
 app.use(require("./routes/projectRoutes"));
 app.use(require("./routes/collaborationRoutes"));
-
+const jobRoutes = require("./routes/jobsRoutes");
+app.use("/", jobRoutes);
 // Define port
 const PORT = process.env.PORT || 8080;
 

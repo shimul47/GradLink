@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router";
 import {
   ArrowLeft,
   Briefcase,
@@ -8,72 +8,82 @@ import {
   Calendar,
   Clock,
   BookOpen,
-  Upload,
   Save,
   Plus,
   X,
   Building,
-
-} from 'lucide-react';
+} from "lucide-react";
+import { AuthContext } from "../Contexts/AuthContext";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const CreateJob = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext); // current user info
+  const axiosSecure = useAxiosSecure();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [skills, setSkills] = useState([]);
-  const [newSkill, setNewSkill] = useState('');
+  const [newSkill, setNewSkill] = useState("");
 
   const [formData, setFormData] = useState({
-    jobTitle: '',
-    company: '',
-    jobType: 'full-time',
-    location: '',
-    salary: '',
-    applicationDeadline: '',
-    experienceLevel: 'entry',
-    description: '',
-    responsibilities: '',
-    requirements: '',
-    benefits: '',
-    contactEmail: '',
-    applicationLink: '',
+    jobTitle: "",
+    company: "",
+    jobType: "full-time",
+    location: "",
+    salary: "",
+    applicationDeadline: "",
+    experienceLevel: "entry",
+    description: "",
+    responsibilities: "",
+    requirements: "",
+    benefits: "",
+    contactEmail: "",
+    applicationLink: "",
     isRemote: false,
-    image: null
+    image: null,
   });
 
   const jobTypes = [
-    'full-time',
-    'part-time',
-    'contract',
-    'internship',
-    'freelance'
+    "full-time",
+    "part-time",
+    "contract",
+    "internship",
+    "freelance",
   ];
 
   const experienceLevels = [
-    'entry',
-    'junior',
-    'mid',
-    'senior',
-    'lead',
-    'executive'
+    "entry",
+    "junior",
+    "mid",
+    "senior",
+    "lead",
+    "executive",
   ];
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleAddSkill = () => {
     if (newSkill.trim() && !skills.includes(newSkill.trim())) {
-      setSkills(prev => [...prev, newSkill.trim()]);
-      setNewSkill('');
+      setSkills((prev) => [...prev, newSkill.trim()]);
+      setNewSkill("");
     }
   };
 
   const handleRemoveSkill = (skillToRemove) => {
-    setSkills(prev => prev.filter(skill => skill !== skillToRemove));
+    setSkills((prev) => prev.filter((skill) => skill !== skillToRemove));
+  };
+
+  const formatLabel = (text) => {
+    return text
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   const handleSubmit = async (e) => {
@@ -81,37 +91,43 @@ const CreateJob = () => {
     setIsSubmitting(true);
 
     try {
-      // Prepare job data
-      const jobData = {
-        ...formData,
-        skills,
-        postedAt: new Date().toISOString(),
-        postedBy: 'current-user-id', // This would come from your auth context
-        status: 'active'
+      // Prepare backend payload
+      const payload = {
+        alumniUserId: user?.uid, // ensure alumni only
+        title: formData.jobTitle,
+        company: formData.company,
+        location: formData.location,
+        type: formData.jobType,
+        salary: formData.salary,
+        deadline: formData.applicationDeadline,
+        experience: formData.experienceLevel,
+        description: formData.description,
+        //
+        responsibilities: formData.responsibilities,
+        //
+        requirements: formData.requirements,
+        //
+        benifits: formData.benefits,
+        skills: skills, // store array
+        isRemote: formData.isRemote,
+        //
+        contactEmail: formData.contactEmail,
+        //
+        applicationLink: formData.applicationLink,
+        status: "active",
       };
 
-      // Here you would make your API call to create the job
-      console.log('Creating job:', jobData);
+      const response = await axiosSecure.post("/jobs", payload);
+      console.log("Job created:", response.data);
 
-      // Simulate API call
-      setTimeout(() => {
-        setIsSubmitting(false);
-        // Show success message and redirect
-        alert('Job posted successfully!');
-        navigate('/dashboard/jobs');
-      }, 2000);
-
-    } catch (error) {
-      console.error('Error creating job:', error);
       setIsSubmitting(false);
-      alert('Failed to post job. Please try again.');
+      alert("Job posted successfully!");
+      navigate("/dashboard/jobs");
+    } catch (error) {
+      console.error("Error creating job:", error);
+      setIsSubmitting(false);
+      alert("Failed to post job. Please try again.");
     }
-  };
-
-  const formatLabel = (text) => {
-    return text.split('-').map(word =>
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
   };
 
   return (
@@ -119,21 +135,20 @@ const CreateJob = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link
-            to="/dashboard/jobs"
-
-          >
+          <Link to="/dashboard/jobs">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-white">Post a Job</h1>
-            <p className="text-gray-400 mt-1">Share job opportunities with BRAC University students and alumni</p>
+            <p className="text-gray-400 mt-1">
+              Share job opportunities with BRAC University students and alumni
+            </p>
           </div>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Information Card */}
+        {/* Job Details Card */}
         <div className="card bg-[#1E293B] border border-[#334155]">
           <div className="card-body">
             <h2 className="card-title text-white flex items-center gap-2">
@@ -142,6 +157,7 @@ const CreateJob = () => {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Job Title */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text text-white">Job Title *</span>
@@ -157,6 +173,7 @@ const CreateJob = () => {
                 />
               </div>
 
+              {/* Company */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text text-white">Company *</span>
@@ -172,6 +189,7 @@ const CreateJob = () => {
                 />
               </div>
 
+              {/* Job Type */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text text-white">Job Type *</span>
@@ -183,15 +201,20 @@ const CreateJob = () => {
                   className="select select-bordered bg-[#0F172A] border-[#334155] text-white"
                   required
                 >
-                  {jobTypes.map(type => (
-                    <option key={type} value={type}>{formatLabel(type)}</option>
+                  {jobTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {formatLabel(type)}
+                    </option>
                   ))}
                 </select>
               </div>
 
+              {/* Experience Level */}
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-white">Experience Level *</span>
+                  <span className="label-text text-white">
+                    Experience Level *
+                  </span>
                 </label>
                 <select
                   name="experienceLevel"
@@ -200,12 +223,15 @@ const CreateJob = () => {
                   className="select select-bordered bg-[#0F172A] border-[#334155] text-white"
                   required
                 >
-                  {experienceLevels.map(level => (
-                    <option key={level} value={level}>{formatLabel(level)}</option>
+                  {experienceLevels.map((level) => (
+                    <option key={level} value={level}>
+                      {formatLabel(level)}
+                    </option>
                   ))}
                 </select>
               </div>
 
+              {/* Location */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text text-white flex items-center gap-2">
@@ -224,6 +250,7 @@ const CreateJob = () => {
                 />
               </div>
 
+              {/* Salary */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text text-white flex items-center gap-2">
@@ -241,6 +268,7 @@ const CreateJob = () => {
                 />
               </div>
 
+              {/* Remote */}
               <div className="form-control">
                 <label className="label cursor-pointer justify-start gap-3">
                   <input
@@ -250,7 +278,9 @@ const CreateJob = () => {
                     onChange={handleInputChange}
                     className="checkbox checkbox-primary"
                   />
-                  <span className="label-text text-white">Remote work available</span>
+                  <span className="label-text text-white">
+                    Remote work available
+                  </span>
                 </label>
               </div>
             </div>
@@ -268,7 +298,9 @@ const CreateJob = () => {
             <div className="space-y-4">
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-white">Job Description *</span>
+                  <span className="label-text text-white">
+                    Job Description *
+                  </span>
                 </label>
                 <textarea
                   name="description"
@@ -282,7 +314,9 @@ const CreateJob = () => {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-white">Key Responsibilities *</span>
+                  <span className="label-text text-white">
+                    Key Responsibilities *
+                  </span>
                 </label>
                 <textarea
                   name="responsibilities"
@@ -296,7 +330,9 @@ const CreateJob = () => {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-white">Requirements & Qualifications *</span>
+                  <span className="label-text text-white">
+                    Requirements & Qualifications *
+                  </span>
                 </label>
                 <textarea
                   name="requirements"
@@ -310,7 +346,9 @@ const CreateJob = () => {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-white">Benefits & Perks</span>
+                  <span className="label-text text-white">
+                    Benefits & Perks
+                  </span>
                 </label>
                 <textarea
                   name="benefits"
@@ -328,7 +366,6 @@ const CreateJob = () => {
         <div className="card bg-[#1E293B] border border-[#334155]">
           <div className="card-body">
             <h2 className="card-title text-white flex items-center gap-2">
-
               Required Skills
             </h2>
 
@@ -343,7 +380,9 @@ const CreateJob = () => {
                   onChange={(e) => setNewSkill(e.target.value)}
                   className="input input-bordered bg-[#0F172A] border-[#334155] text-white flex-1"
                   placeholder="Add skill (e.g., React, Python)"
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
+                  onKeyPress={(e) =>
+                    e.key === "Enter" && (e.preventDefault(), handleAddSkill())
+                  }
                 />
                 <button
                   type="button"
@@ -358,7 +397,10 @@ const CreateJob = () => {
               {skills.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {skills.map((skill, index) => (
-                    <span key={index} className="badge badge-primary badge-lg gap-1">
+                    <span
+                      key={index}
+                      className="badge badge-primary badge-lg gap-1"
+                    >
                       {skill}
                       <button
                         type="button"
@@ -421,7 +463,9 @@ const CreateJob = () => {
 
               <div className="form-control md:col-span-2">
                 <label className="label">
-                  <span className="label-text text-white">Application Link *</span>
+                  <span className="label-text text-white">
+                    Application Link *
+                  </span>
                 </label>
                 <input
                   type="url"
@@ -436,7 +480,6 @@ const CreateJob = () => {
             </div>
           </div>
         </div>
-
 
         {/* Submit Button */}
         <div className="flex gap-4 justify-end">

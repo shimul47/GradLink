@@ -45,7 +45,7 @@ const createCollaborationRequest = async (req, res) => {
   }
 };
 
-// Get all collaboration requests for a receiver (alumni)
+// Get collaboration requests for a receiver (alumni)
 const getCollaborationRequests = async (req, res) => {
   try {
     const { userId } = req.query;
