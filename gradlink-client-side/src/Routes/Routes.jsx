@@ -93,10 +93,10 @@ export const router = createBrowserRouter([
         path: "/dashboard/jobs/create",
         Component: CreateJob,
       },
-      {
-        path: "/dashboard/jobs/my-job-posts",
-        Component: MyJobPost,
-      },
+      // {
+      //   path: "/dashboard/jobs/job-app",
+      //   Component: MyJobPost,
+      // },
       {
         path: "/dashboard/events",
         Component: Event,
