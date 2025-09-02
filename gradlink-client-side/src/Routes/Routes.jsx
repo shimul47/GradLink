@@ -27,6 +27,7 @@ import Users from "../Dashboard Components/Users";
 import UniDatabase from "../Dashboard Components/UniDatabase";
 import PendingVerify from "../Dashboard Components/PendingVerify";
 import ProjectsDashboard from "../Dashboard Components/ProjectsDashboard";
+import AllProjects from "../pages/AllProjects";
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
       {
         path: "/verify",
         Component: Verify,
+      },
+      {
+        path: "/allprojects",
+        Component: AllProjects,
       },
     ],
   },
