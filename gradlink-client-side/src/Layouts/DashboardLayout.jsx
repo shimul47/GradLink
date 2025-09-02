@@ -148,7 +148,7 @@ const DashboardLayout = () => {
           href: "/dashboard/jobs",
           subItems: [
             { label: "Create Job Post", href: "/dashboard/jobs/create" },
-            { label: "My Job Posts", href: "/dashboard/jobs/my-job-posts" },
+            // { label: "My Job Posts", href: "/dashboard/jobs/my-job-posts" },
           ],
         },
         {
