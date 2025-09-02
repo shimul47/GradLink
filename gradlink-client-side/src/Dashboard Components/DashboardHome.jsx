@@ -113,7 +113,7 @@ const DashboardHome = () => {
     },
   ];
 
-  // const { user } = use(AuthContext);
+  const { user } = use(AuthContext);
   const { userType } = useUserType();
 
   return (
@@ -122,7 +122,7 @@ const DashboardHome = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white">
-            Welcome back, User
+            Welcome back, {user.displayName}
           </h1>
           <p className="text-gray-400 mt-2">
             Here's what's happening with your GradLink account today.
@@ -156,10 +156,11 @@ const DashboardHome = () => {
                       {stat.value}
                     </h3>
                     <p
-                      className={`text-sm mt-1 ${stat.trend === "up"
-                        ? "text-emerald-400"
-                        : "text-amber-400"
-                        }`}
+                      className={`text-sm mt-1 ${
+                        stat.trend === "up"
+                          ? "text-emerald-400"
+                          : "text-amber-400"
+                      }`}
                     >
                       {stat.change} from last week
                     </p>

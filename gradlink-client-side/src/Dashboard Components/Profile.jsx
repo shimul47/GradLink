@@ -28,7 +28,7 @@ const Profile = () => {
 
     const fetchUser = async () => {
       try {
-        const userId = user.uid;
+        const userId = user?.uid;
 
         //student
         try {
