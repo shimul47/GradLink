@@ -1,11 +1,11 @@
 const db = require("../config/db");
 
 // Get all projects
-const getProject = async (req, res) => {
+const getProjects = async (req, res) => {
   try {
-    const userId = req.query.userId;
+    const { userId } = req.query;
     let query = "SELECT * FROM projects";
-    let params = [];
+    const params = [];
 
     if (userId) {
       query += " WHERE userId = ?";
@@ -20,9 +20,12 @@ const getProject = async (req, res) => {
       let techStacksArray = [];
 
       if (project.techStacks) {
-        techStacksArray = Array.isArray(project.techStacks)
-          ? project.techStacks
-          : [];
+        try {
+          techStacksArray = JSON.parse(project.techStacks);
+          if (!Array.isArray(techStacksArray)) techStacksArray = [];
+        } catch (err) {
+          techStacksArray = [];
+        }
       }
 
       return {
@@ -40,10 +43,12 @@ const getProject = async (req, res) => {
       };
     });
 
-    res.status(200).json({ projects });
+    res.status(200).json({ success: true, projects });
   } catch (err) {
     console.error("Error fetching projects:", err);
-    res.status(500).json({ message: "Failed to fetch projects" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch projects" });
   }
 };
 
@@ -63,7 +68,9 @@ const createProject = async (req, res) => {
     } = req.body;
 
     if (!userId || !title || !description || !category) {
-      return res.status(400).json({ message: "Required fields are missing" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Required fields are missing" });
     }
 
     const [result] = await db.query(
@@ -83,13 +90,86 @@ const createProject = async (req, res) => {
       ]
     );
 
-    res
-      .status(201)
-      .json({ message: "Project created", projectId: result.insertId });
+    res.status(201).json({
+      success: true,
+      message: "Project created",
+      projectId: result.insertId,
+    });
   } catch (err) {
     console.error("Error creating project:", err);
-    res.status(500).json({ message: "Failed to create project" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to create project" });
   }
 };
 
-module.exports = { getProject, createProject };
+// Create a collaboration request
+const createCollaborationRequest = async (req, res) => {
+  try {
+    const {
+      projectId,
+      senderUserId,
+      message,
+      requestedRole,
+      availability,
+      skills,
+      portfolioLink,
+    } = req.body;
+
+    if (
+      !projectId ||
+      !senderUserId ||
+      !message ||
+      !requestedRole ||
+      !availability ||
+      !skills
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Required fields are missing" });
+    }
+
+    // Get receiverUserId (project creator)
+    const [projectRows] = await db.query(
+      "SELECT userId FROM projects WHERE projectId = ?",
+      [projectId]
+    );
+
+    if (projectRows.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Project not found" });
+    }
+
+    const receiverUserId = projectRows[0].userId;
+
+    // Insert collaboration request
+    await db.query(
+      `INSERT INTO collaboration_requests 
+      (projectId, senderUserId, receiverUserId, message, requestedRole, availability, portfolioLink, skills) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        projectId,
+        senderUserId,
+        receiverUserId,
+        message,
+        requestedRole,
+        availability,
+        portfolioLink || null,
+        JSON.stringify(skills.split(",").map((s) => s.trim())),
+      ]
+    );
+
+    res
+      .status(201)
+      .json({ success: true, message: "Collaboration request sent" });
+  } catch (err) {
+    console.error("Error creating collaboration request:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to create collaboration request",
+    });
+  }
+};
+
+module.exports = { getProjects, createProject, createCollaborationRequest };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Search,
   User,
@@ -13,7 +13,7 @@ import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { AuthContext } from "../Contexts/AuthContext";
 
 const CollaborationRequest = () => {
-  const { user } = React.useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const userId = user?.uid;
   const axiosSecure = useAxiosSecure();
 
@@ -25,8 +25,8 @@ const CollaborationRequest = () => {
 
   // Fetch collaboration requests
   useEffect(() => {
+    if (!userId) return;
     const fetchCollaborationRequests = async () => {
-      if (!userId) return;
       try {
         const { data } = await axiosSecure.get(
           `/collaboration-requests?userId=${userId}`
@@ -39,15 +39,12 @@ const CollaborationRequest = () => {
     fetchCollaborationRequests();
   }, [userId, axiosSecure]);
 
-  // Fetch sender info dynamically
+  // Fetch sender details
   const getSenderDetails = async (senderUserId) => {
     if (!senderUserId) return { name: "-", email: "-", id: "-" };
-
-    // Return cached sender if available
     if (senderCache[senderUserId]) return senderCache[senderUserId];
 
     try {
-      // First try fetching as student
       const studentRes = await axiosSecure.get(`/studentlist/${senderUserId}`);
       const student = studentRes.data;
       const sender = {
@@ -59,7 +56,6 @@ const CollaborationRequest = () => {
       return sender;
     } catch {
       try {
-        // If not student, try alumni
         const alumniRes = await axiosSecure.get(`/alumnilist/${senderUserId}`);
         const alumni = alumniRes.data;
         const sender = {
@@ -77,7 +73,7 @@ const CollaborationRequest = () => {
     }
   };
 
-  // Filtered requests with safe checks
+  // Apply filters and attach sender info
   const [filteredRequests, setFilteredRequests] = useState([]);
   useEffect(() => {
     const applyFilter = async () => {
@@ -138,7 +134,7 @@ const CollaborationRequest = () => {
 
   const handleAccept = async (requestId) => {
     try {
-      await axiosSecure.put(`/collaboration-requests/${requestId}`, {
+      await axiosSecure.put(`/collaboration-requests/${requestId}/status`, {
         status: "accepted",
       });
       setCollaborationRequests((prev) =>
@@ -151,7 +147,7 @@ const CollaborationRequest = () => {
 
   const handleReject = async (requestId) => {
     try {
-      await axiosSecure.put(`/collaboration-requests/${requestId}`, {
+      await axiosSecure.put(`/collaboration-requests/${requestId}/status`, {
         status: "rejected",
       });
       setCollaborationRequests((prev) =>
@@ -180,52 +176,7 @@ const CollaborationRequest = () => {
         </div>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="card bg-[#1E293B] border border-[#334155]">
-          <div className="card-body p-4 text-center">
-            <div className="text-2xl font-bold text-white">
-              {collaborationRequests.length}
-            </div>
-            <p className="text-gray-400 text-sm">Total Requests</p>
-          </div>
-        </div>
-        <div className="card bg-[#1E293B] border border-[#334155]">
-          <div className="card-body p-4 text-center">
-            <div className="text-2xl font-bold text-amber-400">
-              {
-                collaborationRequests.filter((r) => r.status === "pending")
-                  .length
-              }
-            </div>
-            <p className="text-gray-400 text-sm">Pending</p>
-          </div>
-        </div>
-        <div className="card bg-[#1E293B] border border-[#334155]">
-          <div className="card-body p-4 text-center">
-            <div className="text-2xl font-bold text-emerald-400">
-              {
-                collaborationRequests.filter((r) => r.status === "accepted")
-                  .length
-              }
-            </div>
-            <p className="text-gray-400 text-sm">Accepted</p>
-          </div>
-        </div>
-        <div className="card bg-[#1E293B] border border-[#334155]">
-          <div className="card-body p-4 text-center">
-            <div className="text-2xl font-bold text-red-400">
-              {
-                collaborationRequests.filter((r) => r.status === "rejected")
-                  .length
-              }
-            </div>
-            <p className="text-gray-400 text-sm">Rejected</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Search and Filter */}
+      {/* Search & Filter */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-1 relative">
           <Search className="w-5 h-5 absolute left-3 top-3 text-gray-400" />
@@ -314,6 +265,7 @@ const CollaborationRequest = () => {
                       </p>
                     </div>
 
+                    {/* Skills & Technologies */}
                     <div>
                       <p className="text-gray-400 text-sm mb-2">
                         Skills & Technologies

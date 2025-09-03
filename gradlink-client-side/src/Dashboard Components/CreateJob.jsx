@@ -93,7 +93,7 @@ const CreateJob = () => {
     try {
       // Prepare backend payload
       const payload = {
-        alumniUserId: user?.uid, // ensure alumni only
+        alumniUserId: user?.uid,
         title: formData.jobTitle,
         company: formData.company,
         location: formData.location,
@@ -108,7 +108,7 @@ const CreateJob = () => {
         requirements: formData.requirements,
         //
         benifits: formData.benefits,
-        skills: skills, // store array
+        skills: skills,
         isRemote: formData.isRemote,
         //
         contactEmail: formData.contactEmail,

@@ -1,6 +1,5 @@
 const db = require("../config/db");
 
-// Create a new collaboration request
 const createCollaborationRequest = async (req, res) => {
   try {
     const {
@@ -18,8 +17,9 @@ const createCollaborationRequest = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const skillsString = skills ? skills.join(",") : null;
-
+    // const skillsString = skills ? skills.join(",") : null;
+    const skillsString =
+      skills && skills.length > 0 ? JSON.stringify(skills) : null;
     const [result] = await db.query(
       `INSERT INTO collaboration_requests 
        (projectId, senderUserId, receiverUserId, message, requestedRole, availability, portfolioLink, skills, date) 
@@ -45,7 +45,7 @@ const createCollaborationRequest = async (req, res) => {
   }
 };
 
-// Get collaboration requests for a receiver (alumni)
+// Get
 const getCollaborationRequests = async (req, res) => {
   try {
     const { userId } = req.query;
@@ -78,7 +78,7 @@ const getCollaborationRequests = async (req, res) => {
   }
 };
 
-// Update the status of a collaboration request
+// Update
 const updateCollaborationRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;

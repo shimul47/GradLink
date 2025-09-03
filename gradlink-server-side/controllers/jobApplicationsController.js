@@ -1,7 +1,5 @@
-// File: controllers/jobApplicationsController.js
 const db = require("../config/db");
 
-// Apply to a job
 const applyJob = async (req, res) => {
   const { jobId, applicantUserId, applicantType, resumeLink, coverLetter } =
     req.body;
@@ -26,7 +24,6 @@ const applyJob = async (req, res) => {
   }
 };
 
-// Get applications for a job
 const getApplicationsByJob = async (req, res) => {
   const { jobId } = req.params;
   try {
@@ -41,7 +38,6 @@ const getApplicationsByJob = async (req, res) => {
   }
 };
 
-// Get applications by a user
 const getApplicationsByUser = async (req, res) => {
   const { applicantUserId } = req.params;
   try {

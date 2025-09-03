@@ -1,4 +1,3 @@
-// 📂 routes/jobRoutes.js
 const express = require("express");
 const {
   createJob,
