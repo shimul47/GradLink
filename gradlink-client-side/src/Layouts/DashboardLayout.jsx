@@ -29,8 +29,8 @@ const DashboardLayout = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const location = useLocation();
   const navigate = useNavigate();
-  const { userType } = useUserType();
-  // const userType = 'alumni'
+  // const { userType } = useUserType();
+  const userType = 'student'
 
   const { user, signOutUser, loading } = use(AuthContext);
 
@@ -51,15 +51,13 @@ const DashboardLayout = () => {
 
   // Navigation link classes with active state
   const linkClasses = ({ isActive }) =>
-    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-      isActive
-        ? "bg-gradient-to-r from-blue-500 to-emerald-400 text-white"
-        : "text-gray-400 hover:bg-[#334155] hover:text-white"
+    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+      ? "bg-gradient-to-r from-blue-500 to-emerald-400 text-white"
+      : "text-gray-400 hover:bg-[#334155] hover:text-white"
     }`;
 
   const subLinkClasses = ({ isActive }) =>
-    `block p-2 text-sm transition-colors ${
-      isActive ? "text-blue-400 font-medium" : "text-gray-400 hover:text-white"
+    `block p-2 text-sm transition-colors ${isActive ? "text-blue-400 font-medium" : "text-gray-400 hover:text-white"
     }`;
 
   // Handle logout

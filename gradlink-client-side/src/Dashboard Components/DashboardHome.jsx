@@ -115,7 +115,7 @@ const DashboardHome = () => {
 
   // const { user } = use(AuthContext);
   // const { userType } = useUserType();
-  const userType = 'alumni'
+  const userType = 'student'
 
   return (
     <div className="space-y-8">

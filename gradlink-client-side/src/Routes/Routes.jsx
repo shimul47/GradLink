@@ -28,6 +28,8 @@ import UniDatabase from "../Dashboard Components/UniDatabase";
 import PendingVerify from "../Dashboard Components/PendingVerify";
 import ProjectsDashboard from "../Dashboard Components/ProjectsDashboard";
 import AllProjects from "../pages/AllProjects";
+import AppliedJobs from "../Dashboard Components/Student Components/AppliedJobs";
+import RegisteredEvent from "../Dashboard Components/Student Components/RegisteredEvent";
 
 export const router = createBrowserRouter([
   {
@@ -155,6 +157,14 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/admin/reports",
       },
+      {
+        path: '/dashboard/jobs/applied',
+        Component: AppliedJobs
+      },
+      {
+        path: '/dashboard/events/registered',
+        Component: RegisteredEvent
+      }
     ],
   },
 ]);
