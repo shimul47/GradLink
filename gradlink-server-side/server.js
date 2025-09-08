@@ -28,6 +28,8 @@ app.use(require("./routes/projectRoutes"));
 app.use(require("./routes/collaborationRoutes"));
 const jobRoutes = require("./routes/jobsRoutes");
 app.use("/", jobRoutes);
+const eventRoutes = require("./routes/eventRoutes");
+app.use("/api", eventRoutes);
 // Define port
 const PORT = process.env.PORT || 8080;
 
