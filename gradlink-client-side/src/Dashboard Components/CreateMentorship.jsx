@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router';
+import React, { useState } from "react";
+import { Link } from "react-router";
 import {
   ArrowLeft,
   BookOpen,
@@ -9,23 +9,23 @@ import {
   Users,
   X,
   Type,
-  FileText
-} from 'lucide-react';
+  FileText,
+} from "lucide-react";
 
 const CreateMentorship = () => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    specialties: [''],
-    experience: '',
-    availability: '',
-    location: '',
+    title: "",
+    description: "",
+    category: "",
+    specialties: [""],
+    experience: "",
+    availability: "",
+    location: "",
     isRemote: false,
-    sessionFormat: '',
-    sessionLength: '',
-    price: '',
-    maxMentees: ''
+    sessionFormat: "",
+    sessionLength: "",
+    price: "",
+    maxMentees: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,27 +33,30 @@ const CreateMentorship = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    if (type === 'checkbox') {
-      setFormData(prev => ({ ...prev, [name]: checked }));
+    if (type === "checkbox") {
+      setFormData((prev) => ({ ...prev, [name]: checked }));
       return;
     }
 
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSpecialtyChange = (index, value) => {
     const newSpecialties = [...formData.specialties];
     newSpecialties[index] = value;
-    setFormData(prev => ({ ...prev, specialties: newSpecialties }));
+    setFormData((prev) => ({ ...prev, specialties: newSpecialties }));
   };
 
   const addSpecialty = () => {
-    setFormData(prev => ({ ...prev, specialties: [...prev.specialties, ''] }));
+    setFormData((prev) => ({
+      ...prev,
+      specialties: [...prev.specialties, ""],
+    }));
   };
 
   const removeSpecialty = (index) => {
     const newSpecialties = formData.specialties.filter((_, i) => i !== index);
-    setFormData(prev => ({ ...prev, specialties: newSpecialties }));
+    setFormData((prev) => ({ ...prev, specialties: newSpecialties }));
   };
 
   const handleSubmit = (e) => {
@@ -62,52 +65,52 @@ const CreateMentorship = () => {
 
     // Simulate API call
     setTimeout(() => {
-      console.log('Mentorship created:', formData);
+      console.log("Mentorship created:", formData);
       setIsSubmitting(false);
-      alert('Mentorship offering created successfully!');
+      alert("Mentorship offering created successfully!");
       // Reset form
       setFormData({
-        title: '',
-        description: '',
-        category: '',
-        specialties: [''],
-        experience: '',
-        availability: '',
-        location: '',
+        title: "",
+        description: "",
+        category: "",
+        specialties: [""],
+        experience: "",
+        availability: "",
+        location: "",
         isRemote: false,
-        sessionFormat: '',
-        sessionLength: '',
-        price: '',
-        maxMentees: ''
+        sessionFormat: "",
+        sessionLength: "",
+        price: "",
+        maxMentees: "",
       });
     }, 1500);
   };
 
   const categories = [
-    'Career Guidance',
-    'Technical Skills',
-    'Portfolio Review',
-    'Interview Preparation',
-    'Resume Review',
-    'Project Guidance',
-    'Leadership Coaching',
-    'Industry Insights'
+    "Career Guidance",
+    "Technical Skills",
+    "Portfolio Review",
+    "Interview Preparation",
+    "Resume Review",
+    "Project Guidance",
+    "Leadership Coaching",
+    "Industry Insights",
   ];
 
   const experienceLevels = [
-    '1-2 years',
-    '3-5 years',
-    '5-7 years',
-    '7-10 years',
-    '10+ years'
+    "1-2 years",
+    "3-5 years",
+    "5-7 years",
+    "7-10 years",
+    "10+ years",
   ];
 
   const sessionFormats = [
-    'One-on-one video calls',
-    'Group sessions',
-    'Text-based communication',
-    'Code/project reviews',
-    'Mixed format'
+    "One-on-one video calls",
+    "Group sessions",
+    "Text-based communication",
+    "Code/project reviews",
+    "Mixed format",
   ];
 
   return (
@@ -115,12 +118,17 @@ const CreateMentorship = () => {
       <div className="max-w-screen-xl px-5 lg:px-5 mx-auto">
         {/* Header */}
         <div className="flex items-center mb-6">
-          <Link to="/dashboard/mentorship" className="btn btn-ghost btn-circle mr-2">
+          <Link
+            to="/dashboard/mentorship"
+            className="btn btn-ghost btn-circle mr-2"
+          >
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-white">Offer Mentorship</h1>
-            <p className="text-gray-400">Create a mentorship offering to help students</p>
+            <p className="text-gray-400">
+              Create a mentorship offering to help students
+            </p>
           </div>
         </div>
 
@@ -135,7 +143,9 @@ const CreateMentorship = () => {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-gray-300">Mentorship Title</span>
+                  <span className="label-text text-gray-300">
+                    Mentorship Title
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -173,15 +183,19 @@ const CreateMentorship = () => {
                     className="select select-bordered bg-[#1E293B] border-[#334155] text-white"
                   >
                     <option value="">Select a category</option>
-                    {categories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
                     ))}
                   </select>
                 </div>
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Your Experience Level</span>
+                    <span className="label-text text-gray-300">
+                      Your Experience Level
+                    </span>
                   </label>
                   <select
                     name="experience"
@@ -190,8 +204,10 @@ const CreateMentorship = () => {
                     className="select select-bordered bg-[#1E293B] border-[#334155] text-white"
                   >
                     <option value="">Select experience level</option>
-                    {experienceLevels.map(level => (
-                      <option key={level} value={level}>{level}</option>
+                    {experienceLevels.map((level) => (
+                      <option key={level} value={level}>
+                        {level}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -207,7 +223,9 @@ const CreateMentorship = () => {
                 Areas of Expertise
               </h2>
 
-              <p className="text-gray-400 text-sm mb-4">List your specialties and skills</p>
+              <p className="text-gray-400 text-sm mb-4">
+                List your specialties and skills
+              </p>
 
               {formData.specialties.map((specialty, index) => (
                 <div key={index} className="form-control mt-2">
@@ -215,7 +233,9 @@ const CreateMentorship = () => {
                     <input
                       type="text"
                       value={specialty}
-                      onChange={(e) => handleSpecialtyChange(index, e.target.value)}
+                      onChange={(e) =>
+                        handleSpecialtyChange(index, e.target.value)
+                      }
                       placeholder={`Specialty ${index + 1}`}
                       className="input input-bordered bg-[#1E293B] border-[#334155] text-white flex-1 mr-2"
                     />
@@ -252,7 +272,9 @@ const CreateMentorship = () => {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-gray-300">Your Availability</span>
+                  <span className="label-text text-gray-300">
+                    Your Availability
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -273,7 +295,9 @@ const CreateMentorship = () => {
                     onChange={handleInputChange}
                     className="checkbox checkbox-primary mr-3"
                   />
-                  <span className="label-text text-gray-300">This is remote mentorship</span>
+                  <span className="label-text text-gray-300">
+                    This is remote mentorship
+                  </span>
                 </label>
               </div>
 
@@ -309,7 +333,9 @@ const CreateMentorship = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Session Format</span>
+                    <span className="label-text text-gray-300">
+                      Session Format
+                    </span>
                   </label>
                   <select
                     name="sessionFormat"
@@ -318,15 +344,19 @@ const CreateMentorship = () => {
                     className="select select-bordered bg-[#1E293B] border-[#334155] text-white"
                   >
                     <option value="">Select format</option>
-                    {sessionFormats.map(format => (
-                      <option key={format} value={format}>{format}</option>
+                    {sessionFormats.map((format) => (
+                      <option key={format} value={format}>
+                        {format}
+                      </option>
                     ))}
                   </select>
                 </div>
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Session Length</span>
+                    <span className="label-text text-gray-300">
+                      Session Length
+                    </span>
                   </label>
                   <select
                     name="sessionLength"
@@ -347,7 +377,9 @@ const CreateMentorship = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Price (optional)</span>
+                    <span className="label-text text-gray-300">
+                      Price (optional)
+                    </span>
                   </label>
                   <div className="relative">
                     <DollarSign className="w-5 h-5 absolute left-3 top-3 text-gray-400" />
@@ -366,7 +398,9 @@ const CreateMentorship = () => {
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Max Mentees (optional)</span>
+                    <span className="label-text text-gray-300">
+                      Max Mentees (optional)
+                    </span>
                   </label>
                   <div className="relative">
                     <Users className="w-5 h-5 absolute left-3 top-3 text-gray-400" />
@@ -401,7 +435,7 @@ const CreateMentorship = () => {
                   Creating Mentorship...
                 </>
               ) : (
-                'Create Mentorship Offering'
+                "Create Mentorship Offering"
               )}
             </button>
           </div>

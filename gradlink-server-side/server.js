@@ -30,6 +30,9 @@ const jobRoutes = require("./routes/jobsRoutes");
 app.use("/", jobRoutes);
 const eventRoutes = require("./routes/eventRoutes");
 app.use("/api", eventRoutes);
+const mentorRoutes = require("./routes/mentorshipOfferingRoutes");
+app.use("/api", mentorRoutes);
+
 // Define port
 const PORT = process.env.PORT || 8080;
 
