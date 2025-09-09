@@ -30,6 +30,7 @@ import ProjectsDashboard from "../Dashboard Components/ProjectsDashboard";
 import AllProjects from "../pages/AllProjects";
 import AppliedJobs from "../Dashboard Components/Student Components/AppliedJobs";
 import RegisteredEvent from "../Dashboard Components/Student Components/RegisteredEvent";
+import AllJobs from "../pages/AllJobs";
 
 export const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path: "/allprojects",
         Component: AllProjects,
+      },
+      {
+        path: "/alljobs",
+        Component: AllJobs,
       },
     ],
   },
