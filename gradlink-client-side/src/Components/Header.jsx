@@ -69,6 +69,11 @@ const Header = () => {
             )}
             {userStatus == "verified" && user && (
               <li>
+                <NavLink to={"/all-mentorship-posts"}>Mentorships</NavLink>
+              </li>
+            )}
+            {userStatus == "verified" && user && (
+              <li>
                 <NavLink to={"/allprojects"}>All Projects</NavLink>
               </li>
             )}
