@@ -32,7 +32,8 @@ const eventRoutes = require("./routes/eventRoutes");
 app.use("/api", eventRoutes);
 const mentorRoutes = require("./routes/mentorshipOfferingRoutes");
 app.use("/api", mentorRoutes);
-
+const mentorReqRoutes = require("./routes/mentorshipRequestRoutes");
+app.use("/api", mentorReqRoutes);
 // Define port
 const PORT = process.env.PORT || 8080;
 

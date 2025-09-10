@@ -232,7 +232,7 @@ const AllJobs = () => {
                 {/* Actions */}
                 <div className="flex justify-between items-center mt-4">
                   <button
-                    className="btn btn-sm bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white"
+                    className="btn btn-sm bg-gradient-to-r from-blue-500 to-emerald-400 shadow-none border-none text-white"
                     onClick={() => toggleExpandJob(job.id)}
                   >
                     {expandedJob === job.id ? (

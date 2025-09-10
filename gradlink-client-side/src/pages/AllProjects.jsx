@@ -59,7 +59,7 @@ const AllProjects = () => {
     fetchProjects();
   }, [axiosSecure]);
 
-  // Fetch alumni list and cache by userId
+  // Fetch alumni list
   useEffect(() => {
     const fetchAlumni = async () => {
       try {
@@ -92,6 +92,11 @@ const AllProjects = () => {
       statusFilter === "all" || project.status === statusFilter;
     return matchesSearch && matchesCategory && matchesStatus;
   });
+
+  // Expand project toggle
+  const toggleExpandProject = (projectId) => {
+    setExpandedProject(expandedProject === projectId ? null : projectId);
+  };
 
   // Open collaboration modal
   const handleCollaborateClick = (project) => {
@@ -171,6 +176,7 @@ const AllProjects = () => {
     }
   };
 
+<<<<<<< HEAD
   const toggleExpandProject = (projectId) => {
     setExpandedProject(expandedProject === projectId ? null : projectId);
   };
@@ -184,6 +190,8 @@ const AllProjects = () => {
     });
   };
 
+=======
+>>>>>>> c132abf (Mentorship Section Done)
   const getCategoryBadge = (category) => {
     const categoryConfig = {
       "Software Development": { color: "badge-primary", text: "Software Dev" },
@@ -355,6 +363,7 @@ const AllProjects = () => {
                       {project.description}
                     </p>
 
+<<<<<<< HEAD
                     {/* Project Details */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div className="flex items-center text-gray-400">
@@ -380,12 +389,24 @@ const AllProjects = () => {
                       <div className="flex flex-wrap gap-2 mb-4">
                         {project.techStacks.map((tech, idx) => (
                           <span key={idx} className="badge badge-outline badge-sm">
+=======
+                  {/* Tech Stacks (always show when expanded) */}
+                  {expandedProject === project.projectId &&
+                    project.techStacks.length > 0 && (
+                      <div className="pt-2 border-t border-[#334155] flex flex-wrap gap-2 mb-4">
+                        {project.techStacks.map((tech, idx) => (
+                          <span
+                            key={idx}
+                            className="badge badge-outline badge-sm text-white bg-[#334155]"
+                          >
+>>>>>>> c132abf (Mentorship Section Done)
                             {tech}
                           </span>
                         ))}
                       </div>
                     )}
 
+<<<<<<< HEAD
                     {/* Expanded Details */}
                     {expandedProject === project.projectId && (
                       <div className="space-y-4 pt-4 border-t border-[#334155]">
@@ -563,6 +584,112 @@ const AllProjects = () => {
           </div>
         )}
       </div>
+=======
+                  {/* Actions */}
+                  <div className="flex justify-between items-center">
+                    <button
+                      className="btn btn-outline text-white shadow-none btn-sm"
+                      onClick={() => toggleExpandProject(project.projectId)}
+                    >
+                      {expandedProject === project.projectId ? (
+                        <>
+                          <ChevronUp className="w-4 h-4 mr-1" /> Show Less
+                        </>
+                      ) : (
+                        <>
+                          <ChevronDown className="w-4 h-4 mr-1" /> Show More
+                        </>
+                      )}
+                    </button>
+                    <button
+                      className="btn bg-gradient-to-r from-blue-500 to-emerald-400 border-none shadow-none text-white"
+                      onClick={() => handleCollaborateClick(project)}
+                    >
+                      <Send className="w-4 h-4 mr-1" /> Collaborate
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {filteredProjects.length === 0 && (
+            <div className="text-center py-12">
+              <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-400">No projects found.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Collaboration Modal */}
+      {collaborationModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50">
+          <div className="bg-[#1E293B] rounded-lg p-6 w-full max-w-md text-white relative">
+            <button
+              className="absolute top-3 right-3 btn btn-ghost btn-sm"
+              onClick={() => setCollaborationModal(null)}
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <h2 className="text-xl font-bold mb-4">
+              Collaborate on {collaborationModal.title}
+            </h2>
+            <form onSubmit={handleCollaborationSubmit} className="space-y-4">
+              <textarea
+                name="message"
+                placeholder="Your message"
+                value={collaborationForm.message}
+                onChange={handleInputChange}
+                className="textarea textarea-bordered w-full bg-[#111827] text-white"
+                required
+              />
+              <input
+                type="text"
+                name="role"
+                placeholder="Requested role"
+                value={collaborationForm.role}
+                onChange={handleInputChange}
+                className="input input-bordered w-full bg-[#111827] text-white"
+                required
+              />
+              <input
+                type="text"
+                name="availability"
+                placeholder="Availability (e.g., 10hrs/week)"
+                value={collaborationForm.availability}
+                onChange={handleInputChange}
+                className="input input-bordered w-full bg-[#111827] text-white"
+                required
+              />
+              <input
+                type="text"
+                name="skillsInput"
+                placeholder="Skills (comma separated)"
+                value={collaborationForm.skillsInput}
+                onChange={handleInputChange}
+                className="input input-bordered w-full bg-[#111827] text-white"
+                required
+              />
+              <input
+                type="text"
+                name="portfolioLink"
+                placeholder="Portfolio link (optional)"
+                value={collaborationForm.portfolioLink}
+                onChange={handleInputChange}
+                className="input input-bordered w-full bg-[#111827] text-white"
+              />
+              <button
+                type="submit"
+                className="btn w-full bg-gradient-to-r from-blue-500 to-emerald-400 border-none shadow-none text-white"
+              >
+                Send Request
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+>>>>>>> c132abf (Mentorship Section Done)
     </div>
   );
 };

@@ -32,6 +32,7 @@ import AppliedJobs from "../Dashboard Components/Student Components/AppliedJobs"
 import RegisteredEvent from "../Dashboard Components/Student Components/RegisteredEvent";
 import AllJobs from "../pages/AllJobs";
 import AllMentorshipPosts from "../pages/AllMentorshipPosts";
+import PrivateRoutes from "./PrivateRoutes";
 
 export const router = createBrowserRouter([
   {

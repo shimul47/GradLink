@@ -337,7 +337,7 @@ const Mentorship = () => {
                 {/* Actions */}
                 <div className="flex justify-between items-center">
                   <button
-                    className="btn btn-ghost btn-sm"
+                    className="btn btn-ghost shadow-none btn-sm"
                     onClick={() => toggleExpandMentorship(mentorship.id)}
                   >
                     {expandedMentorship === mentorship.id ? (
