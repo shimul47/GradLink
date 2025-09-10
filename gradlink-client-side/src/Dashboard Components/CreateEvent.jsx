@@ -528,7 +528,7 @@ const CreateEvent = () => {
             </Link>
             <button
               type="submit"
-              className="btn bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white"
+              className="btn bg-gradient-to-r from-blue-500 to-emerald-400 border-none shadow-none text-white"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
