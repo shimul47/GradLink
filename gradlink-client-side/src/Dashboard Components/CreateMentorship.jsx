@@ -11,8 +11,15 @@ import {
   Type,
   FileText,
 } from "lucide-react";
+import { use } from "react";
+import { AuthContext } from "../Contexts/AuthContext";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const CreateMentorship = () => {
+  const { user } = use(AuthContext);
+  const userId = user.uid;
+  const axiosSecure = useAxiosSecure();
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -26,6 +33,7 @@ const CreateMentorship = () => {
     sessionLength: "",
     price: "",
     maxMentees: "",
+    creatorId: userId,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,6 +73,7 @@ const CreateMentorship = () => {
 
     // Simulate API call
     setTimeout(() => {
+      axiosSecure.post("/api/mentor", formData);
       console.log("Mentorship created:", formData);
       setIsSubmitting(false);
       alert("Mentorship offering created successfully!");

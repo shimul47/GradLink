@@ -11,9 +11,10 @@ import {
   CheckCircle,
   Clock,
 } from "lucide-react";
-import useAxiosSecure from "../hooks/useAxiosSecure";
+
 import { use } from "react";
 import { AuthContext } from "../Contexts/AuthContext";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const Profile = () => {
   const axiosSecure = useAxiosSecure();

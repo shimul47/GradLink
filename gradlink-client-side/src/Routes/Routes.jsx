@@ -61,7 +61,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/verify",
-        Component: Verify,
+        element: (
+          <PrivateRoutes>
+            <Verify />
+          </PrivateRoutes>
+        ),
       },
       {
         path: "/allprojects",
@@ -119,10 +123,6 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "/dashboard/events/my-events",
-        Component: MyEvents,
-      },
-      {
         path: "/dashboard/mentorship",
         Component: Mentorship,
       },
@@ -163,16 +163,14 @@ export const router = createBrowserRouter([
         path: "/dashboard/admin/reports",
       },
       {
-        path: '/dashboard/jobs/applied',
-        Component: AppliedJobs
+        path: "/dashboard/jobs/applied",
+        Component: AppliedJobs,
       },
       {
-        path: '/dashboard/events/registered',
-        Component: RegisteredEvent
+        path: "/dashboard/events/registered",
+        Component: RegisteredEvent,
       },
-      {
-
-      }
+      {},
     ],
   },
 ]);

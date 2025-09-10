@@ -146,7 +146,7 @@ const CreateEvent = () => {
         endTime: formData.endTime,
         price: formData.price || 0,
         capacity: formData.capacity || null,
-        creatorId: userId, // ✅ Firebase UID
+        creatorId: userId, // Firebase UID
         responderId: null,
       };
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { getAuth } from "firebase/auth";
+
 import {
   Ticket,
   Calendar,
@@ -9,14 +8,17 @@ import {
   DollarSign,
   CalendarDays,
 } from "lucide-react";
+import { use } from "react";
+import { AuthContext } from "../Contexts/AuthContext";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const MyCreatedEvents = () => {
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const auth = getAuth();
-  const user = auth.currentUser; // Logged-in Firebase user
+  const { user } = use(AuthContext);
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     if (!user) return;
@@ -25,9 +27,7 @@ const MyCreatedEvents = () => {
       try {
         const creatorId = user.uid; // Use logged-in user's UID
 
-        const res = await axios.get(
-          `http://localhost:8080/api/creator/${creatorId}`
-        );
+        const res = await axiosSecure.get(`/api/creator/${creatorId}`);
 
         setEvents(Array.isArray(res.data) ? res.data : []);
       } catch (err) {

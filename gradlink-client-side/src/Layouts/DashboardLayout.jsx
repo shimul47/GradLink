@@ -104,12 +104,7 @@ const DashboardLayout = () => {
     if (userType === "student") {
       return [
         ...commonItems,
-        {
-          id: "jobs",
-          label: "Applied Jobs",
-          icon: Briefcase,
-          href: "/dashboard/jobs/applied",
-        },
+
         {
           id: "events",
           label: "Registered Events",
@@ -158,7 +153,7 @@ const DashboardLayout = () => {
           href: "/dashboard/events",
           subItems: [
             { label: "Create Event", href: "/dashboard/events/create" },
-            { label: "My Events", href: "/dashboard/events/my-events" },
+            // { label: "My Events", href: "/dashboard/events/my-events" },
           ],
         },
         {
