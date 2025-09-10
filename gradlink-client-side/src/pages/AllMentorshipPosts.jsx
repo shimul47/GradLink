@@ -94,7 +94,7 @@ const AllMentorshipPosts
         mentorId: mentorship.creatorId,
         mentorName: mentorship.creatorName,
         ...requestForm,
-        requesterId: user.uid
+        requesterId: user.uid,
         submittedDate: new Date().toISOString(),
         status: 'pending'
       };
@@ -130,7 +130,7 @@ const AllMentorshipPosts
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="max-w-screen px-5 lg:px-0 mx-auto space-y-6">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
