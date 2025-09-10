@@ -225,9 +225,8 @@ const CreateEvent = () => {
                     value={formData.title}
                     onChange={handleInputChange}
                     placeholder="Enter event title"
-                    className={`input input-bordered bg-[#1E293B] border-[#334155] text-white ${
-                      errors.title ? "input-error" : ""
-                    }`}
+                    className={`input input-bordered bg-[#1E293B] border-[#334155] text-white ${errors.title ? "input-error" : ""
+                      }`}
                   />
                   {errors.title && (
                     <span className="text-error text-sm mt-1">
@@ -244,9 +243,8 @@ const CreateEvent = () => {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className={`select select-bordered bg-[#1E293B] border-[#334155] text-white ${
-                      errors.category ? "select-error" : ""
-                    }`}
+                    className={`select select-bordered bg-[#1E293B] border-[#334155] text-white ${errors.category ? "select-error" : ""
+                      }`}
                   >
                     <option value="">Select a category</option>
                     {categories.map((cat) => (
@@ -275,9 +273,8 @@ const CreateEvent = () => {
                   onChange={handleInputChange}
                   placeholder="Describe your event"
                   rows={4}
-                  className={`textarea textarea-bordered bg-[#1E293B] border-[#334155] text-white ${
-                    errors.description ? "textarea-error" : ""
-                  }`}
+                  className={`textarea textarea-bordered bg-[#1E293B] border-[#334155] text-white ${errors.description ? "textarea-error" : ""
+                    }`}
                 />
                 {errors.description && (
                   <span className="text-error text-sm mt-1">
@@ -305,9 +302,8 @@ const CreateEvent = () => {
                     name="date"
                     value={formData.date}
                     onChange={handleInputChange}
-                    className={`input input-bordered bg-[#1E293B] border-[#334155] text-white ${
-                      errors.date ? "input-error" : ""
-                    }`}
+                    className={`input input-bordered bg-[#1E293B] border-[#334155] text-white ${errors.date ? "input-error" : ""
+                      }`}
                   />
                   {errors.date && (
                     <span className="text-error text-sm mt-1">
@@ -327,9 +323,8 @@ const CreateEvent = () => {
                     name="time"
                     value={formData.time}
                     onChange={handleInputChange}
-                    className={`input input-bordered bg-[#1E293B] border-[#334155] text-white ${
-                      errors.time ? "input-error" : ""
-                    }`}
+                    className={`input input-bordered bg-[#1E293B] border-[#334155] text-white ${errors.time ? "input-error" : ""
+                      }`}
                   />
                   {errors.time && (
                     <span className="text-error text-sm mt-1">
@@ -347,9 +342,8 @@ const CreateEvent = () => {
                     name="endTime"
                     value={formData.endTime}
                     onChange={handleInputChange}
-                    className={`input input-bordered bg-[#1E293B] border-[#334155] text-white ${
-                      errors.endTime ? "input-error" : ""
-                    }`}
+                    className={`input input-bordered bg-[#1E293B] border-[#334155] text-white ${errors.endTime ? "input-error" : ""
+                      }`}
                   />
                   {errors.endTime && (
                     <span className="text-error text-sm mt-1">
@@ -397,9 +391,8 @@ const CreateEvent = () => {
                       value={formData.virtualLink}
                       onChange={handleInputChange}
                       placeholder="https://meet.example.com/event"
-                      className={`input input-bordered bg-[#1E293B] border-[#334155] text-white pl-10 w-full ${
-                        errors.virtualLink ? "input-error" : ""
-                      }`}
+                      className={`input input-bordered bg-[#1E293B] border-[#334155] text-white pl-10 w-full ${errors.virtualLink ? "input-error" : ""
+                        }`}
                     />
                   </div>
                   {errors.virtualLink && (
@@ -421,9 +414,8 @@ const CreateEvent = () => {
                       value={formData.location}
                       onChange={handleInputChange}
                       placeholder="Enter event address"
-                      className={`input input-bordered bg-[#1E293B] border-[#334155] text-white pl-10 w-full ${
-                        errors.location ? "input-error" : ""
-                      }`}
+                      className={`input input-bordered bg-[#1E293B] border-[#334155] text-white pl-10 w-full ${errors.location ? "input-error" : ""
+                        }`}
                     />
                   </div>
                   {errors.location && (

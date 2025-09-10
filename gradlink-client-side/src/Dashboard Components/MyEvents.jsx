@@ -12,7 +12,7 @@ import { use } from "react";
 import { AuthContext } from "../Contexts/AuthContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 
-const MyCreatedEvents = () => {
+const MyEvents = () => {
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -43,10 +43,10 @@ const MyCreatedEvents = () => {
 
   const filteredEvents = Array.isArray(events)
     ? events.filter(
-        (event) =>
-          event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.category.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      (event) =>
+        event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.category.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     : [];
 
   if (loading)
@@ -96,4 +96,4 @@ const MyCreatedEvents = () => {
   );
 };
 
-export default MyCreatedEvents;
+export default MyEvents;
