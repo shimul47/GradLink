@@ -80,6 +80,11 @@ const Header = () => {
               )}
               {userStatus == "verified" && user && (
                 <li>
+                  <NavLink to={"/ask-recommendation"}>Recommendations</NavLink>
+                </li>
+              )}
+              {userStatus == "verified" && user && (
+                <li>
                   <NavLink to={"/dashboard"}>Dashboard</NavLink>
                 </li>
               )}
@@ -121,6 +126,11 @@ const Header = () => {
             {userStatus == "verified" && user && (
               <li>
                 <NavLink to={"/alljobs"}>All Jobs</NavLink>
+              </li>
+            )}
+            {userStatus == "verified" && user && (
+              <li>
+                <NavLink to={"/ask-recommendation"}>Recommendations</NavLink>
               </li>
             )}
             {userStatus == "verified" && user && (

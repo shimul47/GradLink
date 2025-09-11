@@ -33,6 +33,7 @@ import RegisteredEvent from "../Dashboard Components/Student Components/Register
 import AllJobs from "../pages/AllJobs";
 import AllMentorshipPosts from "../pages/AllMentorshipPosts";
 import PrivateRoutes from "./PrivateRoutes";
+import RecommendationsList from "../pages/RecommendationsList";
 
 export const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ export const router = createBrowserRouter([
       {
         path: "/all-mentorship-posts",
         element: <PrivateRoutes><AllMentorshipPosts /></PrivateRoutes>
+      },
+      {
+        path: "/ask-recommendation",
+        element: <PrivateRoutes><RecommendationsList /></PrivateRoutes>
       },
     ],
   },
