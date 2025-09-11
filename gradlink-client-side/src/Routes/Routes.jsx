@@ -126,7 +126,7 @@ export const router = createBrowserRouter([
       // },
       {
         path: "/dashboard/events",
-        Component: Event,
+        Component: MyEvents,
       },
       {
         path: "/dashboard/events/create",

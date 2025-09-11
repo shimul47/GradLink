@@ -12,7 +12,7 @@ import {
   BookOpen,
   Briefcase,
   GraduationCap,
-  User
+  User,
 } from "lucide-react";
 import Loader from "../Components/Loader";
 
@@ -38,22 +38,23 @@ const VerifyUser = () => {
   const [verificationStatus, setVerificationStatus] = useState(null); // null, 'pending', 'verified'
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check verification status 
+  // Check verification status
   useEffect(() => {
     const checkVerificationStatus = async () => {
       try {
-        setIsLoading(true);
-        const response = await axiosPublic.get(`/verification-status/${user.uid}`);
+        const response = await axiosPublic.get(
+          `/verification-status/${user.uid}`
+        );
         setVerificationStatus(response.data.status);
-        if (response.data.status === 'verified') {
+        if (response.data.status === "verified") {
           navigate("/");
-        } else if (response.data.status === 'pending') {
+        } else if (response.data.status === "pending") {
           setIsSubmitted(true);
         }
       } catch (error) {
         console.error("Error checking verification status:", error);
         // If there's an error, assume not verified and show form
-        setVerificationStatus('not_verified');
+        setVerificationStatus("not_verified");
       } finally {
         setIsLoading(false);
       }
@@ -86,9 +87,9 @@ const VerifyUser = () => {
 
       alert(response.data.message);
       setIsSubmitted(true);
-      setVerificationStatus('pending');
+      setVerificationStatus("pending");
 
-      // Redirect to home 
+      // Redirect to home
       setTimeout(() => {
         navigate("/");
         window.location.reload();
@@ -101,17 +102,8 @@ const VerifyUser = () => {
     }
   };
 
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
-        <Loader />
-      </div>
-    );
-  }
-
-  // pending verification message 
-  if (verificationStatus === 'pending') {
+  // Show pending verification message
+  if (verificationStatus === "pending") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-[#1E293B] border border-[#334155] rounded-lg p-8 text-center">
@@ -120,18 +112,25 @@ const VerifyUser = () => {
               <Clock className="w-8 h-8 text-amber-400" />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Verification in Progress</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Verification in Progress
+          </h2>
           <p className="text-gray-400 mb-6">
-            Your account verification is currently under review. This process usually takes
+            Your account verification is currently under review. This process
+            usually takes
             <span className="text-amber-400 font-medium"> 24 to 48 hours</span>.
             You'll receive a notification once your verification is complete.
           </p>
           <div className="bg-slate-800/50 p-4 rounded-lg mb-6">
             <p className="text-sm text-gray-300">
-              <strong>Submitted Details:</strong><br />
-              Name: {formData.fullName}<br />
-              ID: {formData.studentId}<br />
-              Email: {formData.officialEmail}<br />
+              <strong>Submitted Details:</strong>
+              <br />
+              Name: {formData.fullName}
+              <br />
+              ID: {formData.studentId}
+              <br />
+              Email: {formData.officialEmail}
+              <br />
               Department: {formData.department}
             </p>
           </div>
@@ -146,7 +145,7 @@ const VerifyUser = () => {
     );
   }
 
-  // verification form 
+  // verification form
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-6">
       <div className="max-w-2xl mx-auto">
@@ -157,7 +156,9 @@ const VerifyUser = () => {
               <UserCheck className="w-8 h-8 text-blue-400" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Verify Your Account</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Verify Your Account
+          </h1>
           <p className="text-gray-400">
             Complete your profile to access all platform features
           </p>
@@ -178,7 +179,9 @@ const VerifyUser = () => {
                 <select
                   className="select select-bordered bg-[#1E293B] border-[#334155] text-white"
                   value={formData.userType}
-                  onChange={(e) => setFormData({ ...formData, userType: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, userType: e.target.value })
+                  }
                   required
                   disabled={isSubmitted}
                 >
@@ -192,14 +195,18 @@ const VerifyUser = () => {
                 {/* Full Name */}
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Full Name *</span>
+                    <span className="label-text text-gray-300">
+                      Full Name *
+                    </span>
                   </label>
                   <input
                     type="text"
                     placeholder="Enter your full name"
                     className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                     value={formData.fullName}
-                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
                     required
                     disabled={isSubmitted}
                   />
@@ -210,15 +217,23 @@ const VerifyUser = () => {
                   <label className="label">
                     <span className="label-text text-gray-300 flex items-center gap-2">
                       <BookOpen className="w-4 h-4" />
-                      {formData.userType === "student" ? "Student ID *" : "Alumni ID *"}
+                      {formData.userType === "student"
+                        ? "Student ID *"
+                        : "Alumni ID *"}
                     </span>
                   </label>
                   <input
                     type="text"
-                    placeholder={formData.userType === "student" ? "Student ID" : "Alumni ID"}
+                    placeholder={
+                      formData.userType === "student"
+                        ? "Student ID"
+                        : "Alumni ID"
+                    }
                     className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                     value={formData.studentId}
-                    onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, studentId: e.target.value })
+                    }
                     required
                     disabled={isSubmitted}
                   />
@@ -238,7 +253,9 @@ const VerifyUser = () => {
                   placeholder="official@institution.edu"
                   className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                   value={formData.officialEmail}
-                  onChange={(e) => setFormData({ ...formData, officialEmail: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, officialEmail: e.target.value })
+                  }
                   required
                   disabled={isSubmitted}
                 />
@@ -248,14 +265,18 @@ const VerifyUser = () => {
                 {/* Department */}
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Department *</span>
+                    <span className="label-text text-gray-300">
+                      Department *
+                    </span>
                   </label>
                   <input
                     type="text"
                     placeholder="e.g., Computer Science"
                     className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                     value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, department: e.target.value })
+                    }
                     required
                     disabled={isSubmitted}
                   />
@@ -265,14 +286,18 @@ const VerifyUser = () => {
                 {formData.userType === "student" && (
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text text-gray-300">Batch Year *</span>
+                      <span className="label-text text-gray-300">
+                        Batch Year *
+                      </span>
                     </label>
                     <input
                       type="number"
                       placeholder="e.g., 2023"
                       className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                       value={formData.batchYear}
-                      onChange={(e) => setFormData({ ...formData, batchYear: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, batchYear: e.target.value })
+                      }
                       required
                       disabled={isSubmitted}
                     />
@@ -292,7 +317,12 @@ const VerifyUser = () => {
                       placeholder="e.g., 2020"
                       className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                       value={formData.graduationYear}
-                      onChange={(e) => setFormData({ ...formData, graduationYear: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          graduationYear: e.target.value,
+                        })
+                      }
                       required
                       disabled={isSubmitted}
                     />
@@ -314,7 +344,9 @@ const VerifyUser = () => {
                     placeholder="e.g., Google, Microsoft"
                     className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
                     value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, company: e.target.value })
+                    }
                     disabled={isSubmitted}
                   />
                 </div>
@@ -326,13 +358,16 @@ const VerifyUser = () => {
                   <input
                     type="checkbox"
                     checked={formData.agreed}
-                    onChange={(e) => setFormData({ ...formData, agreed: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, agreed: e.target.checked })
+                    }
                     required
                     disabled={isSubmitted}
                     className="checkbox checkbox-primary mr-3"
                   />
                   <span className="label-text text-gray-300">
-                    I confirm that the information provided is accurate and complete
+                    I confirm that the information provided is accurate and
+                    complete
                   </span>
                 </label>
               </div>
@@ -366,7 +401,9 @@ const VerifyUser = () => {
               {/* Help Text */}
               <div className="text-center">
                 <p className="text-gray-400 text-sm">
-                  Verification typically takes 24-48 hours. Your data will be checked against official university database. Once data is matched your verification request will be approved.
+                  Verification typically takes 24-48 hours. Your data will be
+                  checked against official university database. Once data is
+                  matched your verification request will be approved.
                 </p>
               </div>
             </form>
