@@ -16,7 +16,7 @@ import {
   Star,
   Eye,
   User,
-  Briefcase
+  Briefcase,
 } from "lucide-react";
 import { AuthContext } from "../Contexts/AuthContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
@@ -59,7 +59,7 @@ const AllProjects = () => {
     fetchProjects();
   }, [axiosSecure]);
 
-  // Fetch alumni list
+  // Fetch alumni list and cache by userId
   useEffect(() => {
     const fetchAlumni = async () => {
       try {
@@ -92,11 +92,6 @@ const AllProjects = () => {
       statusFilter === "all" || project.status === statusFilter;
     return matchesSearch && matchesCategory && matchesStatus;
   });
-
-  // Expand project toggle
-  const toggleExpandProject = (projectId) => {
-    setExpandedProject(expandedProject === projectId ? null : projectId);
-  };
 
   // Open collaboration modal
   const handleCollaborateClick = (project) => {
@@ -176,7 +171,6 @@ const AllProjects = () => {
     }
   };
 
-<<<<<<< HEAD
   const toggleExpandProject = (projectId) => {
     setExpandedProject(expandedProject === projectId ? null : projectId);
   };
@@ -190,8 +184,6 @@ const AllProjects = () => {
     });
   };
 
-=======
->>>>>>> c132abf (Mentorship Section Done)
   const getCategoryBadge = (category) => {
     const categoryConfig = {
       "Software Development": { color: "badge-primary", text: "Software Dev" },
@@ -199,8 +191,8 @@ const AllProjects = () => {
       "AI/ML": { color: "badge-accent", text: "AI/ML" },
       "Data Science": { color: "badge-info", text: "Data Science" },
       "Mobile Development": { color: "badge-success", text: "Mobile Dev" },
-      "IoT": { color: "badge-warning", text: "IoT" },
-      "Blockchain": { color: "badge-error", text: "Blockchain" }
+      IoT: { color: "badge-warning", text: "IoT" },
+      Blockchain: { color: "badge-error", text: "Blockchain" },
     };
     const config = categoryConfig[category] || {
       color: "badge-neutral",
@@ -225,9 +217,10 @@ const AllProjects = () => {
 
   const stats = {
     totalProjects: projects.length,
-    activeProjects: projects.filter(p => p.status === 'active').length,
-    planningProjects: projects.filter(p => p.status === 'planning').length,
-    developmentProjects: projects.filter(p => p.status === 'development').length
+    activeProjects: projects.filter((p) => p.status === "active").length,
+    planningProjects: projects.filter((p) => p.status === "planning").length,
+    developmentProjects: projects.filter((p) => p.status === "development")
+      .length,
   };
 
   if (loading) {
@@ -248,25 +241,52 @@ const AllProjects = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white">All Projects</h1>
-            <p className="text-gray-400 mt-2">Discover projects to collaborate on</p>
+            <p className="text-gray-400 mt-2">
+              Discover projects to collaborate on
+            </p>
           </div>
         </div>
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { value: stats.totalProjects, label: 'Total Projects', color: 'text-white', icon: <BookOpen className="w-5 h-5" /> },
-            { value: stats.activeProjects, label: 'Active', color: 'text-emerald-400', icon: <Star className="w-5 h-5" /> },
-            { value: stats.planningProjects, label: 'Planning', color: 'text-amber-400', icon: <Clock className="w-5 h-5" /> },
-            { value: stats.developmentProjects, label: 'Development', color: 'text-blue-400', icon: <Code className="w-5 h-5" /> }
+            {
+              value: stats.totalProjects,
+              label: "Total Projects",
+              color: "text-white",
+              icon: <BookOpen className="w-5 h-5" />,
+            },
+            {
+              value: stats.activeProjects,
+              label: "Active",
+              color: "text-emerald-400",
+              icon: <Star className="w-5 h-5" />,
+            },
+            {
+              value: stats.planningProjects,
+              label: "Planning",
+              color: "text-amber-400",
+              icon: <Clock className="w-5 h-5" />,
+            },
+            {
+              value: stats.developmentProjects,
+              label: "Development",
+              color: "text-blue-400",
+              icon: <Code className="w-5 h-5" />,
+            },
           ].map((stat, index) => (
-            <div key={index} className="card bg-[#1E293B] border border-[#334155] shadow-lg">
+            <div
+              key={index}
+              className="card bg-[#1E293B] border border-[#334155] shadow-lg"
+            >
               <div className="card-body p-4 flex flex-row items-center">
                 <div className={`rounded-lg p-2 ${stat.color}`}>
                   {stat.icon}
                 </div>
                 <div className="ml-3">
-                  <div className={`text-xl font-bold ${stat.color}`}>{stat.value}</div>
+                  <div className={`text-xl font-bold ${stat.color}`}>
+                    {stat.value}
+                  </div>
                   <p className="text-gray-400 text-xs">{stat.label}</p>
                 </div>
               </div>
@@ -319,16 +339,18 @@ const AllProjects = () => {
             <div className="text-center py-12">
               <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-300 mb-2">
-                {searchTerm || categoryFilter !== 'all' || statusFilter !== 'all'
-                  ? 'No matching projects found'
-                  : 'No projects available yet'
-                }
+                {searchTerm ||
+                categoryFilter !== "all" ||
+                statusFilter !== "all"
+                  ? "No matching projects found"
+                  : "No projects available yet"}
               </h3>
               <p className="text-gray-500">
-                {searchTerm || categoryFilter !== 'all' || statusFilter !== 'all'
-                  ? 'Try adjusting your search or filter criteria'
-                  : 'Check back later for new projects'
-                }
+                {searchTerm ||
+                categoryFilter !== "all" ||
+                statusFilter !== "all"
+                  ? "Try adjusting your search or filter criteria"
+                  : "Check back later for new projects"}
               </p>
             </div>
           ) : (
@@ -363,7 +385,6 @@ const AllProjects = () => {
                       {project.description}
                     </p>
 
-<<<<<<< HEAD
                     {/* Project Details */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div className="flex items-center text-gray-400">
@@ -388,38 +409,36 @@ const AllProjects = () => {
                     {project.techStacks && project.techStacks.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-4">
                         {project.techStacks.map((tech, idx) => (
-                          <span key={idx} className="badge badge-outline badge-sm">
-=======
-                  {/* Tech Stacks (always show when expanded) */}
-                  {expandedProject === project.projectId &&
-                    project.techStacks.length > 0 && (
-                      <div className="pt-2 border-t border-[#334155] flex flex-wrap gap-2 mb-4">
-                        {project.techStacks.map((tech, idx) => (
                           <span
                             key={idx}
-                            className="badge badge-outline badge-sm text-white bg-[#334155]"
+                            className="badge badge-outline badge-sm"
                           >
->>>>>>> c132abf (Mentorship Section Done)
                             {tech}
                           </span>
                         ))}
                       </div>
                     )}
 
-<<<<<<< HEAD
                     {/* Expanded Details */}
                     {expandedProject === project.projectId && (
                       <div className="space-y-4 pt-4 border-t border-[#334155]">
                         <div>
-                          <p className="text-gray-300 font-medium mb-2">Full Description</p>
+                          <p className="text-gray-300 font-medium mb-2">
+                            Full Description
+                          </p>
                           <p className="text-gray-400">{project.description}</p>
                         </div>
 
                         <div>
-                          <p className="text-gray-300 font-medium mb-2">Technical Stack</p>
+                          <p className="text-gray-300 font-medium mb-2">
+                            Technical Stack
+                          </p>
                           <div className="flex flex-wrap gap-2">
                             {project.techStacks?.map((tech, idx) => (
-                              <span key={idx} className="badge badge-primary badge-sm">
+                              <span
+                                key={idx}
+                                className="badge badge-primary badge-sm"
+                              >
                                 {tech}
                               </span>
                             ))}
@@ -482,14 +501,18 @@ const AllProjects = () => {
                   {collaborationModal.title}
                 </h4>
                 <p className="text-gray-400">
-                  by {alumniList[collaborationModal.userId] || collaborationModal.userId}
+                  by{" "}
+                  {alumniList[collaborationModal.userId] ||
+                    collaborationModal.userId}
                 </p>
               </div>
 
               <form onSubmit={handleCollaborationSubmit} className="space-y-4">
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Your Message *</span>
+                    <span className="label-text text-gray-300">
+                      Your Message *
+                    </span>
                   </label>
                   <textarea
                     name="message"
@@ -505,7 +528,9 @@ const AllProjects = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text text-gray-300">Requested Role *</span>
+                      <span className="label-text text-gray-300">
+                        Requested Role *
+                      </span>
                     </label>
                     <input
                       type="text"
@@ -520,7 +545,9 @@ const AllProjects = () => {
 
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text text-gray-300">Availability *</span>
+                      <span className="label-text text-gray-300">
+                        Availability *
+                      </span>
                     </label>
                     <input
                       type="text"
@@ -551,7 +578,9 @@ const AllProjects = () => {
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Portfolio Link (Optional)</span>
+                    <span className="label-text text-gray-300">
+                      Portfolio Link (Optional)
+                    </span>
                   </label>
                   <input
                     type="url"
@@ -584,112 +613,6 @@ const AllProjects = () => {
           </div>
         )}
       </div>
-=======
-                  {/* Actions */}
-                  <div className="flex justify-between items-center">
-                    <button
-                      className="btn btn-outline text-white shadow-none btn-sm"
-                      onClick={() => toggleExpandProject(project.projectId)}
-                    >
-                      {expandedProject === project.projectId ? (
-                        <>
-                          <ChevronUp className="w-4 h-4 mr-1" /> Show Less
-                        </>
-                      ) : (
-                        <>
-                          <ChevronDown className="w-4 h-4 mr-1" /> Show More
-                        </>
-                      )}
-                    </button>
-                    <button
-                      className="btn bg-gradient-to-r from-blue-500 to-emerald-400 border-none shadow-none text-white"
-                      onClick={() => handleCollaborateClick(project)}
-                    >
-                      <Send className="w-4 h-4 mr-1" /> Collaborate
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-
-          {filteredProjects.length === 0 && (
-            <div className="text-center py-12">
-              <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-400">No projects found.</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Collaboration Modal */}
-      {collaborationModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50">
-          <div className="bg-[#1E293B] rounded-lg p-6 w-full max-w-md text-white relative">
-            <button
-              className="absolute top-3 right-3 btn btn-ghost btn-sm"
-              onClick={() => setCollaborationModal(null)}
-            >
-              <X className="w-4 h-4" />
-            </button>
-            <h2 className="text-xl font-bold mb-4">
-              Collaborate on {collaborationModal.title}
-            </h2>
-            <form onSubmit={handleCollaborationSubmit} className="space-y-4">
-              <textarea
-                name="message"
-                placeholder="Your message"
-                value={collaborationForm.message}
-                onChange={handleInputChange}
-                className="textarea textarea-bordered w-full bg-[#111827] text-white"
-                required
-              />
-              <input
-                type="text"
-                name="role"
-                placeholder="Requested role"
-                value={collaborationForm.role}
-                onChange={handleInputChange}
-                className="input input-bordered w-full bg-[#111827] text-white"
-                required
-              />
-              <input
-                type="text"
-                name="availability"
-                placeholder="Availability (e.g., 10hrs/week)"
-                value={collaborationForm.availability}
-                onChange={handleInputChange}
-                className="input input-bordered w-full bg-[#111827] text-white"
-                required
-              />
-              <input
-                type="text"
-                name="skillsInput"
-                placeholder="Skills (comma separated)"
-                value={collaborationForm.skillsInput}
-                onChange={handleInputChange}
-                className="input input-bordered w-full bg-[#111827] text-white"
-                required
-              />
-              <input
-                type="text"
-                name="portfolioLink"
-                placeholder="Portfolio link (optional)"
-                value={collaborationForm.portfolioLink}
-                onChange={handleInputChange}
-                className="input input-bordered w-full bg-[#111827] text-white"
-              />
-              <button
-                type="submit"
-                className="btn w-full bg-gradient-to-r from-blue-500 to-emerald-400 border-none shadow-none text-white"
-              >
-                Send Request
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
->>>>>>> c132abf (Mentorship Section Done)
     </div>
   );
 };
