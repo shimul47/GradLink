@@ -90,10 +90,6 @@ const VerifyUser = () => {
       setVerificationStatus("pending");
 
       // Redirect to home
-      setTimeout(() => {
-        navigate("/");
-        window.location.reload();
-      }, 2000);
     } catch (err) {
       console.error(err);
       alert("Submission failed. Please try again.");

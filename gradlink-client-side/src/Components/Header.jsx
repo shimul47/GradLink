@@ -10,7 +10,7 @@ const Header = () => {
 
   const handleSignOut = () => {
     signOutUser()
-      .then(() => { })
+      .then(() => {})
       .catch((error) => {
         console.log(error.message);
       });
@@ -47,17 +47,15 @@ const Header = () => {
               <li>
                 <NavLink>Home</NavLink>
               </li>
-              {userStatus == 'verified' && user && (
-                <li className="hidden">
-                  <NavLink to={"/about"}>About</NavLink>
-                </li>
-              )
-              }
-              {userStatus == 'verified' && user && (
-                <li>
-                  <NavLink to={"/contact"}>Contact</NavLink>
-                </li>
-              )}
+
+              <li>
+                <NavLink to={"/about"}>About</NavLink>
+              </li>
+
+              <li>
+                <NavLink to={"/contact"}>Contact</NavLink>
+              </li>
+
               {userStatus != "verified" && user && (
                 <li>
                   <NavLink to={"/verify"}>Verify</NavLink>
@@ -97,17 +95,15 @@ const Header = () => {
             <li>
               <NavLink>Home</NavLink>
             </li>
-            {userStatus == 'verified' && user && (
-              <li className="hidden">
-                <NavLink to={"/about"}>About</NavLink>
-              </li>
-            )
-            }
-            {userStatus == 'verified' && user && (
-              <li>
-                <NavLink to={"/contact"}>Contact</NavLink>
-              </li>
-            )}
+
+            <li>
+              <NavLink to={"/about"}>About</NavLink>
+            </li>
+
+            <li>
+              <NavLink to={"/contact"}>Contact</NavLink>
+            </li>
+
             {userStatus != "verified" && user && (
               <li>
                 <NavLink to={"/verify"}>Verify</NavLink>
