@@ -14,6 +14,7 @@ import {
   GraduationCap,
   User
 } from "lucide-react";
+import Loader from "../Components/Loader";
 
 const VerifyUser = () => {
   const { user } = use(AuthContext);
@@ -35,11 +36,13 @@ const VerifyUser = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState(null); // null, 'pending', 'verified'
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check verification status 
   useEffect(() => {
     const checkVerificationStatus = async () => {
       try {
+        setIsLoading(true);
         const response = await axiosPublic.get(`/verification-status/${user.uid}`);
         setVerificationStatus(response.data.status);
         if (response.data.status === 'verified') {
@@ -49,11 +52,17 @@ const VerifyUser = () => {
         }
       } catch (error) {
         console.error("Error checking verification status:", error);
+        // If there's an error, assume not verified and show form
+        setVerificationStatus('not_verified');
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    checkVerificationStatus();
-  }, [user.uid, axiosPublic, navigate]);
+    if (user) {
+      checkVerificationStatus();
+    }
+  }, [user, axiosPublic, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,7 +101,16 @@ const VerifyUser = () => {
     }
   };
 
-  // Show pending verification message
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
+        <Loader />
+      </div>
+    );
+  }
+
+  // pending verification message 
   if (verificationStatus === 'pending') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
@@ -108,6 +126,15 @@ const VerifyUser = () => {
             <span className="text-amber-400 font-medium"> 24 to 48 hours</span>.
             You'll receive a notification once your verification is complete.
           </p>
+          <div className="bg-slate-800/50 p-4 rounded-lg mb-6">
+            <p className="text-sm text-gray-300">
+              <strong>Submitted Details:</strong><br />
+              Name: {formData.fullName}<br />
+              ID: {formData.studentId}<br />
+              Email: {formData.officialEmail}<br />
+              Department: {formData.department}
+            </p>
+          </div>
           <button
             onClick={() => navigate("/")}
             className="btn bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white w-full"
@@ -119,7 +146,7 @@ const VerifyUser = () => {
     );
   }
 
-  // Show verification form
+  // verification form 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-6">
       <div className="max-w-2xl mx-auto">

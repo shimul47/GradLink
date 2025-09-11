@@ -15,6 +15,7 @@ import {
 import { use } from "react";
 import { AuthContext } from "../Contexts/AuthContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import Loader from "../Components/Loader";
 
 const Profile = () => {
   const axiosSecure = useAxiosSecure();
@@ -86,7 +87,7 @@ const Profile = () => {
     });
   };
 
-  if (loading) return <p className="text-white">Loading profile...</p>;
+  if (loading) return <Loader />;
   if (!userData) return <p className="text-red-500">User not found!</p>;
 
   return (
@@ -123,11 +124,10 @@ const Profile = () => {
           <Clock className="w-5 h-5 text-amber-400" />
         )}
         <span
-          className={`font-semibold ${
-            userData.status === "verified"
+          className={`font-semibold ${userData.status === "verified"
               ? "text-emerald-400"
               : "text-amber-400"
-          }`}
+            }`}
         >
           {userData.status === "verified"
             ? "Verified Account"

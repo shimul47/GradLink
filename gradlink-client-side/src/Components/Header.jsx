@@ -44,9 +44,45 @@ const Header = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
-              <li>Home</li>
-              <li>About</li>
-              <li>Contact</li>
+              <li>
+                <NavLink>Home</NavLink>
+              </li>
+              {userStatus == 'verified' && user && (
+                <li className="hidden">
+                  <NavLink to={"/about"}>About</NavLink>
+                </li>
+              )
+              }
+              {userStatus == 'verified' && user && (
+                <li>
+                  <NavLink to={"/contact"}>Contact</NavLink>
+                </li>
+              )}
+              {userStatus != "verified" && user && (
+                <li>
+                  <NavLink to={"/verify"}>Verify</NavLink>
+                </li>
+              )}
+              {userStatus == "verified" && user && (
+                <li>
+                  <NavLink to={"/all-mentorship-posts"}>Mentorships</NavLink>
+                </li>
+              )}
+              {userStatus == "verified" && user && (
+                <li>
+                  <NavLink to={"/allprojects"}>All Projects</NavLink>
+                </li>
+              )}
+              {userStatus == "verified" && user && (
+                <li>
+                  <NavLink to={"/alljobs"}>All Jobs</NavLink>
+                </li>
+              )}
+              {userStatus == "verified" && user && (
+                <li>
+                  <NavLink to={"/dashboard"}>Dashboard</NavLink>
+                </li>
+              )}
             </ul>
           </div>
           <Link className=" text-2xl font-bold">GradLink</Link>
@@ -56,12 +92,17 @@ const Header = () => {
             <li>
               <NavLink>Home</NavLink>
             </li>
-            <li>
-              <NavLink to={"/about"}>About</NavLink>
-            </li>
-            <li>
-              <NavLink to={"/contact"}>Contact</NavLink>
-            </li>
+            {userStatus == 'verified' && user && (
+              <li className="hidden">
+                <NavLink to={"/about"}>About</NavLink>
+              </li>
+            )
+            }
+            {userStatus == 'verified' && user && (
+              <li>
+                <NavLink to={"/contact"}>Contact</NavLink>
+              </li>
+            )}
             {userStatus != "verified" && user && (
               <li>
                 <NavLink to={"/verify"}>Verify</NavLink>

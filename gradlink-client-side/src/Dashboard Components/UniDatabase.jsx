@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import Loader from "../Components/Loader";
 
 const UniDatabase = () => {
   const axios = useAxiosSecure();
@@ -22,7 +23,7 @@ const UniDatabase = () => {
   }, [axios]);
 
   if (loading)
-    return <p className="text-white text-center mt-10">Loading...</p>;
+    return <Loader />;
 
   if (error)
     return (

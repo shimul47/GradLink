@@ -15,6 +15,7 @@ import {
   BarChart3,
   TrendingUp,
 } from "lucide-react";
+import Loader from "../Components/Loader";
 
 const ProjectsDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -82,7 +83,7 @@ const ProjectsDashboard = () => {
     );
   };
 
-  if (loading) return <p className="text-white">Loading projects...</p>;
+  if (loading) return <Loader />;
 
   return (
     <div className="space-y-6">
@@ -142,21 +143,19 @@ const ProjectsDashboard = () => {
       {/* Tabs */}
       <div className="flex items-center gap-5 p-3 bg-[#1E293B]">
         <div
-          className={`cursor-pointer ${
-            activeTab === "my-projects"
+          className={`cursor-pointer ${activeTab === "my-projects"
               ? "font-semibold text-blue-500 border-b border-blue-500"
               : "text-white"
-          }`}
+            }`}
           onClick={() => setActiveTab("my-projects")}
         >
           My Projects
         </div>
         <div
-          className={`cursor-pointer ${
-            activeTab === "analytics"
+          className={`cursor-pointer ${activeTab === "analytics"
               ? "font-semibold text-blue-500 border-b border-blue-500"
               : "text-white"
-          }`}
+            }`}
           onClick={() => setActiveTab("analytics")}
         >
           Analytics
@@ -276,8 +275,8 @@ const ProjectsDashboard = () => {
                 <p className="text-3xl font-bold text-emerald-400 mt-2">
                   {projects.length
                     ? Math.round(
-                        (stats.completedProjects / stats.totalProjects) * 100
-                      )
+                      (stats.completedProjects / stats.totalProjects) * 100
+                    )
                     : 0}
                   %
                 </p>
@@ -292,8 +291,8 @@ const ProjectsDashboard = () => {
                 <p className="text-3xl font-bold text-emerald-400 mt-2">
                   {projects.length
                     ? Math.round(
-                        (stats.activeProjects / stats.totalProjects) * 100
-                      )
+                      (stats.activeProjects / stats.totalProjects) * 100
+                    )
                     : 0}
                   %
                 </p>
@@ -314,8 +313,8 @@ const ProjectsDashboard = () => {
                 <div className="text-2xl font-bold text-emerald-400">
                   {projects.length
                     ? Math.round(
-                        (stats.activeProjects / stats.totalProjects) * 100
-                      )
+                      (stats.activeProjects / stats.totalProjects) * 100
+                    )
                     : 0}
                   %
                 </div>
@@ -325,11 +324,11 @@ const ProjectsDashboard = () => {
                 <div className="text-2xl font-bold text-amber-400">
                   {projects.length
                     ? (
-                        projects.reduce(
-                          (sum, p) => sum + p.techStacks.length,
-                          0
-                        ) / projects.length
-                      ).toFixed(1)
+                      projects.reduce(
+                        (sum, p) => sum + p.techStacks.length,
+                        0
+                      ) / projects.length
+                    ).toFixed(1)
                     : 0}
                 </div>
                 <p className="text-gray-400 text-sm">Avg. Tech Stack Size</p>

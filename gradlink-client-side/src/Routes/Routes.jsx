@@ -71,21 +71,21 @@ export const router = createBrowserRouter([
       },
       {
         path: "/allprojects",
-        Component: AllProjects,
+        element: <PrivateRoutes><AllProjects /></PrivateRoutes>
       },
       {
         path: "/alljobs",
-        Component: AllJobs,
+        element: <PrivateRoutes><AllJobs /></PrivateRoutes>
       },
       {
         path: "/all-mentorship-posts",
-        Component: AllMentorshipPosts,
+        element: <PrivateRoutes><AllMentorshipPosts /></PrivateRoutes>
       },
     ],
   },
   {
     path: "/dashboard",
-    Component: DashboardLayout,
+    element: <PrivateRoutes><DashboardLayout /></PrivateRoutes>,
     children: [
       {
         path: "/dashboard",

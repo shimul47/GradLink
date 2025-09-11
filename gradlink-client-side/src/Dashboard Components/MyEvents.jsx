@@ -23,6 +23,7 @@ import {
 import { use } from "react";
 import { AuthContext } from "../Contexts/AuthContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import Loader from "../Components/Loader";
 
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
@@ -128,10 +129,7 @@ const MyEvents = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="loading loading-spinner loading-lg mb-4"></div>
-          <p>Loading your events...</p>
-        </div>
+        <Loader />
       </div>
     );
   }

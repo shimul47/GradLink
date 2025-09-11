@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { AuthContext } from "../Contexts/AuthContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import Loader from "../Components/Loader";
 
 const Job = () => {
   const { user } = useContext(AuthContext);
@@ -39,8 +40,8 @@ const Job = () => {
         const jobsArray = Array.isArray(res.data)
           ? res.data
           : Array.isArray(res.data.jobs)
-          ? res.data.jobs
-          : [];
+            ? res.data.jobs
+            : [];
 
         const myJobs = jobsArray.filter(
           (job) => job.alumniUserId === user?.uid
@@ -120,7 +121,7 @@ const Job = () => {
   };
 
   if (loading)
-    return <div className="text-center text-white mt-12">Loading jobs...</div>;
+    return <Loader />;
 
   return (
     <div className="space-y-6">

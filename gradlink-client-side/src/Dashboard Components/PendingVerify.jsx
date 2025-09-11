@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { toast } from "react-toastify";
+import Loader from "../Components/Loader";
 
 const PendingVerify = () => {
   const axios = useAxiosSecure();
@@ -63,7 +64,7 @@ const PendingVerify = () => {
   };
 
   if (loading)
-    return <p className="text-white text-center mt-10">Loading...</p>;
+    return <Loader />;
   if (error) return <p className="text-red-500 text-center mt-10">{error}</p>;
 
   return (
