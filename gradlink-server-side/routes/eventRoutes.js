@@ -12,5 +12,5 @@ router.get("/events", eventsController.getEvents);
 router.get("/events/:id", eventsController.getEventById);
 
 router.get("/creator/:creatorId", eventsController.getEventsByCreator);
-
+router.get("/responder/:responderId", eventsController.getEventsBySender);
 module.exports = router;

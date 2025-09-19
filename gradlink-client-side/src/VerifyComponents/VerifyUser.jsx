@@ -7,7 +7,6 @@ import {
   UserCheck,
   Clock,
   CheckCircle,
-  XCircle,
   Mail,
   BookOpen,
   Briefcase,
@@ -35,7 +34,7 @@ const VerifyUser = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState(null); // null, 'pending', 'verified'
+  const [verificationStatus, setVerificationStatus] = useState(null); // 'pending', 'verified', 'not_verified'
   const [isLoading, setIsLoading] = useState(true);
 
   // Check verification status
@@ -46,14 +45,16 @@ const VerifyUser = () => {
           `/verification-status/${user.uid}`
         );
         setVerificationStatus(response.data.status);
+
         if (response.data.status === "verified") {
           navigate("/");
         } else if (response.data.status === "pending") {
           setIsSubmitted(true);
+        } else {
+          setVerificationStatus("not_verified");
         }
       } catch (error) {
         console.error("Error checking verification status:", error);
-        // If there's an error, assume not verified and show form
         setVerificationStatus("not_verified");
       } finally {
         setIsLoading(false);
@@ -88,8 +89,6 @@ const VerifyUser = () => {
       alert(response.data.message);
       setIsSubmitted(true);
       setVerificationStatus("pending");
-
-      // Redirect to home
     } catch (err) {
       console.error(err);
       alert("Submission failed. Please try again.");
@@ -98,8 +97,10 @@ const VerifyUser = () => {
     }
   };
 
+  if (isLoading) return <Loader />;
+
   // Show pending verification message
-  if (verificationStatus === "pending") {
+  if (verificationStatus === "pending" || isSubmitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-[#1E293B] border border-[#334155] rounded-lg p-8 text-center">

@@ -34,6 +34,9 @@ const mentorRoutes = require("./routes/mentorshipOfferingRoutes");
 app.use("/api", mentorRoutes);
 const mentorReqRoutes = require("./routes/mentorshipRequestRoutes");
 app.use("/api", mentorReqRoutes);
+const recommendation = require("./routes/recommendationRoutes");
+app.use(recommendation);
+
 // Define port
 const PORT = process.env.PORT || 8080;
 

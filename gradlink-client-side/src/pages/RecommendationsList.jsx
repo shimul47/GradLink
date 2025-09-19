@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import {
   Search,
   Filter,
@@ -16,9 +16,10 @@ import {
   Calendar,
   BookOpen,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
 } from "lucide-react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { AuthContext } from "../Contexts/AuthContext";
 
 const RecommendationsList = () => {
   const [alumniList, setAlumniList] = useState([]);
@@ -36,18 +37,20 @@ const RecommendationsList = () => {
     deadline: "",
     githubLink: "",
     portfolioLink: "",
-    additionalInfo: ""
+    additionalInfo: "",
   });
   const [expandedProfile, setExpandedProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const axiosSecure = useAxiosSecure();
+  const { user } = use(AuthContext);
+  const userId = user?.uid;
 
   // Fetch alumni list
   useEffect(() => {
     const fetchAlumni = async () => {
       try {
-        const res = await axiosSecure.get("/alumniLists");
+        const res = await axiosSecure.get("/alumnilist");
         setAlumniList(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error("Error fetching alumni list:", err);
@@ -61,16 +64,27 @@ const RecommendationsList = () => {
   }, [axiosSecure]);
 
   // Get unique departments and companies for filters
-  const departments = [...new Set(alumniList.map(alumni => alumni.department).filter(Boolean))];
-  const companies = [...new Set(alumniList.map(alumni => alumni.company).filter(Boolean))];
+  const departments = [
+    ...new Set(alumniList.map((alumni) => alumni.department).filter(Boolean)),
+  ];
+  const companies = [
+    ...new Set(alumniList.map((alumni) => alumni.company).filter(Boolean)),
+  ];
 
-  const filteredAlumni = alumniList.filter(alumni => {
-    const matchesSearch = alumni.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredAlumni = alumniList.filter((alumni) => {
+    const matchesSearch =
+      alumni.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       alumni.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (alumni.company && alumni.company.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (alumni.currentPosition && alumni.currentPosition.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesDepartment = departmentFilter === "all" || alumni.department === departmentFilter;
-    const matchesCompany = companyFilter === "all" || alumni.company === companyFilter;
+      (alumni.company &&
+        alumni.company.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (alumni.currentPosition &&
+        alumni.currentPosition
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()));
+    const matchesDepartment =
+      departmentFilter === "all" || alumni.department === departmentFilter;
+    const matchesCompany =
+      companyFilter === "all" || alumni.company === companyFilter;
     return matchesSearch && matchesDepartment && matchesCompany;
   });
 
@@ -86,13 +100,13 @@ const RecommendationsList = () => {
       deadline: "",
       githubLink: "",
       portfolioLink: "",
-      additionalInfo: ""
+      additionalInfo: "",
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setRecommendationForm(prev => ({ ...prev, [name]: value }));
+    setRecommendationForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmitRecommendation = async (e) => {
@@ -106,11 +120,12 @@ const RecommendationsList = () => {
       await axiosSecure.post("/recommendation-requests", {
         alumniId: recommendationModal.userId,
         alumniName: recommendationModal.fullName,
-        studentId: "current-student-id",
-        studentName: "Current Student",
+        studentId: recommendationForm.studentId,
+        studentName: recommendationForm.studentName,
+        requesterId: userId,
         ...recommendationForm,
         submittedDate: new Date().toISOString(),
-        status: "pending"
+        status: "pending",
       });
 
       alert("Recommendation request sent successfully!");
@@ -127,10 +142,10 @@ const RecommendationsList = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return "Not specified";
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -147,12 +162,12 @@ const RecommendationsList = () => {
 
   const stats = {
     totalAlumni: alumniList.length,
-    verifiedAlumni: alumniList.filter(a => a.status === 'verified').length,
-    hasCompany: alumniList.filter(a => a.company).length,
-    recentGrads: alumniList.filter(a => {
+    verifiedAlumni: alumniList.filter((a) => a.status === "verified").length,
+    hasCompany: alumniList.filter((a) => a.company).length,
+    recentGrads: alumniList.filter((a) => {
       if (!a.graduationYear) return false;
       return new Date().getFullYear() - parseInt(a.graduationYear) <= 5;
-    }).length
+    }).length,
   };
 
   if (loading) {
@@ -173,25 +188,52 @@ const RecommendationsList = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white">Alumni Network</h1>
-            <p className="text-gray-400 mt-2">Connect with alumni for recommendations and guidance</p>
+            <p className="text-gray-400 mt-2">
+              Connect with alumni for recommendations and guidance
+            </p>
           </div>
         </div>
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { value: stats.totalAlumni, label: 'Total Alumni', color: 'text-white', icon: <User className="w-5 h-5" /> },
-            { value: stats.verifiedAlumni, label: 'Verified', color: 'text-emerald-400', icon: <Star className="w-5 h-5" /> },
-            { value: stats.hasCompany, label: 'Industry Professionals', color: 'text-blue-400', icon: <Building className="w-5 h-5" /> },
-            { value: stats.recentGrads, label: 'Recent Graduates', color: 'text-amber-400', icon: <GraduationCap className="w-5 h-5" /> }
+            {
+              value: stats.totalAlumni,
+              label: "Total Alumni",
+              color: "text-white",
+              icon: <User className="w-5 h-5" />,
+            },
+            {
+              value: stats.verifiedAlumni,
+              label: "Verified",
+              color: "text-emerald-400",
+              icon: <Star className="w-5 h-5" />,
+            },
+            {
+              value: stats.hasCompany,
+              label: "Industry Professionals",
+              color: "text-blue-400",
+              icon: <Building className="w-5 h-5" />,
+            },
+            {
+              value: stats.recentGrads,
+              label: "Recent Graduates",
+              color: "text-amber-400",
+              icon: <GraduationCap className="w-5 h-5" />,
+            },
           ].map((stat, index) => (
-            <div key={index} className="card bg-[#1E293B] border border-[#334155] shadow-lg">
+            <div
+              key={index}
+              className="card bg-[#1E293B] border border-[#334155] shadow-lg"
+            >
               <div className="card-body p-4 flex flex-row items-center">
                 <div className={`rounded-lg p-2 ${stat.color}`}>
                   {stat.icon}
                 </div>
                 <div className="ml-3">
-                  <div className={`text-xl font-bold ${stat.color}`}>{stat.value}</div>
+                  <div className={`text-xl font-bold ${stat.color}`}>
+                    {stat.value}
+                  </div>
                   <p className="text-gray-400 text-xs">{stat.label}</p>
                 </div>
               </div>
@@ -217,8 +259,10 @@ const RecommendationsList = () => {
             onChange={(e) => setDepartmentFilter(e.target.value)}
           >
             <option value="all">All Departments</option>
-            {departments.map(dept => (
-              <option key={dept} value={dept}>{dept}</option>
+            {departments.map((dept) => (
+              <option key={dept} value={dept}>
+                {dept}
+              </option>
             ))}
           </select>
           <select
@@ -227,8 +271,10 @@ const RecommendationsList = () => {
             onChange={(e) => setCompanyFilter(e.target.value)}
           >
             <option value="all">All Companies</option>
-            {companies.map(company => (
-              <option key={company} value={company}>{company}</option>
+            {companies.map((company) => (
+              <option key={company} value={company}>
+                {company}
+              </option>
             ))}
           </select>
         </div>
@@ -239,21 +285,26 @@ const RecommendationsList = () => {
             <div className="col-span-full text-center py-12">
               <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-300 mb-2">
-                {searchTerm || departmentFilter !== 'all' || companyFilter !== 'all'
-                  ? 'No matching alumni found'
-                  : 'No alumni profiles available yet'
-                }
+                {searchTerm ||
+                departmentFilter !== "all" ||
+                companyFilter !== "all"
+                  ? "No matching alumni found"
+                  : "No alumni profiles available yet"}
               </h3>
               <p className="text-gray-500">
-                {searchTerm || departmentFilter !== 'all' || companyFilter !== 'all'
-                  ? 'Try adjusting your search or filter criteria'
-                  : 'Check back later for alumni profiles'
-                }
+                {searchTerm ||
+                departmentFilter !== "all" ||
+                companyFilter !== "all"
+                  ? "Try adjusting your search or filter criteria"
+                  : "Check back later for alumni profiles"}
               </p>
             </div>
           ) : (
             filteredAlumni.map((alumni) => (
-              <div key={alumni.userId} className="card bg-[#1E293B] border border-[#334155] hover:border-blue-400 transition-all duration-300">
+              <div
+                key={alumni.userId}
+                className="card bg-[#1E293B] border border-[#334155] hover:border-blue-400 transition-all duration-300"
+              >
                 <div className="card-body">
                   {/* Header */}
                   <div className="flex items-center gap-3 mb-4">
@@ -261,10 +312,14 @@ const RecommendationsList = () => {
                       <User className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-white">{alumni.fullName}</h3>
-                      <p className="text-gray-400 text-sm">{alumni.currentPosition || "Professional"}</p>
+                      <h3 className="font-semibold text-white">
+                        {alumni.fullName}
+                      </h3>
+                      <p className="text-gray-400 text-sm">
+                        {alumni.currentPosition || "Professional"}
+                      </p>
                     </div>
-                    {alumni.status === 'verified' && (
+                    {alumni.status === "verified" && (
                       <div className="badge badge-success badge-sm">
                         <Star className="w-3 h-3" /> Verified
                       </div>
@@ -298,22 +353,32 @@ const RecommendationsList = () => {
                   {expandedProfile === alumni.userId && (
                     <div className="space-y-3 pt-4 border-t border-[#334155]">
                       <div>
-                        <p className="text-gray-300 text-sm font-medium">Email</p>
+                        <p className="text-gray-300 text-sm font-medium">
+                          Email
+                        </p>
                         <p className="text-gray-400">{alumni.officialEmail}</p>
                       </div>
                       <div>
-                        <p className="text-gray-300 text-sm font-medium">Student ID</p>
+                        <p className="text-gray-300 text-sm font-medium">
+                          Student ID
+                        </p>
                         <p className="text-gray-400">{alumni.studentId}</p>
                       </div>
                       {alumni.verifiedAt && (
                         <div>
-                          <p className="text-gray-300 text-sm font-medium">Verified Since</p>
-                          <p className="text-gray-400">{formatDate(alumni.verifiedAt)}</p>
+                          <p className="text-gray-300 text-sm font-medium">
+                            Verified Since
+                          </p>
+                          <p className="text-gray-400">
+                            {formatDate(alumni.verifiedAt)}
+                          </p>
                         </div>
                       )}
                       {alumni.batchYear && (
                         <div>
-                          <p className="text-gray-300 text-sm font-medium">Batch Year</p>
+                          <p className="text-gray-300 text-sm font-medium">
+                            Batch Year
+                          </p>
                           <p className="text-gray-400">{alumni.batchYear}</p>
                         </div>
                       )}
@@ -323,7 +388,7 @@ const RecommendationsList = () => {
                   {/* Actions */}
                   <div className="flex justify-between items-center">
                     <button
-                      className="btn btn-ghost btn-sm"
+                      className="btn btn-outline shadow-none text-white btn-sm"
                       onClick={() => toggleExpandProfile(alumni.userId)}
                     >
                       {expandedProfile === alumni.userId ? (
@@ -339,7 +404,7 @@ const RecommendationsList = () => {
                       )}
                     </button>
                     <button
-                      className="btn bg-gradient-to-r from-blue-500 to-emerald-400 border-none text-white"
+                      className="btn bg-gradient-to-r from-blue-500 to-emerald-400 border-none shadow-none text-white"
                       onClick={() => handleRecommendationClick(alumni)}
                     >
                       <Send className="w-4 h-4 mr-1" />
@@ -374,9 +439,12 @@ const RecommendationsList = () => {
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-white">{recommendationModal.fullName}</h4>
+                    <h4 className="font-semibold text-white">
+                      {recommendationModal.fullName}
+                    </h4>
                     <p className="text-gray-400 text-sm">
-                      {recommendationModal.currentPosition} at {recommendationModal.company}
+                      {recommendationModal.currentPosition} at{" "}
+                      {recommendationModal.company}
                     </p>
                   </div>
                 </div>
@@ -385,7 +453,43 @@ const RecommendationsList = () => {
               <form onSubmit={handleSubmitRecommendation} className="space-y-4">
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Request Type *</span>
+                    <span className="label-text text-gray-300">
+                      Student ID *
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    name="studentId"
+                    value={recommendationForm.studentId}
+                    onChange={handleInputChange}
+                    placeholder="Enter your Student ID"
+                    className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
+                    required
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-gray-300">
+                      Student Name *
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    name="studentName"
+                    value={recommendationForm.studentName}
+                    onChange={handleInputChange}
+                    placeholder="Enter your full name"
+                    className="input input-bordered bg-[#1E293B] border-[#334155] text-white"
+                    required
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-gray-300">
+                      Request Type *
+                    </span>
                   </label>
                   <select
                     name="requestType"
@@ -403,11 +507,13 @@ const RecommendationsList = () => {
                   </select>
                 </div>
 
-                {recommendationForm.requestType === 'job' && (
+                {recommendationForm.requestType === "job" && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text text-gray-300">Company *</span>
+                        <span className="label-text text-gray-300">
+                          Company *
+                        </span>
                       </label>
                       <input
                         type="text"
@@ -421,7 +527,9 @@ const RecommendationsList = () => {
                     </div>
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text text-gray-300">Position *</span>
+                        <span className="label-text text-gray-300">
+                          Position *
+                        </span>
                       </label>
                       <input
                         type="text"
@@ -436,11 +544,13 @@ const RecommendationsList = () => {
                   </div>
                 )}
 
-                {recommendationForm.requestType === 'graduate-school' && (
+                {recommendationForm.requestType === "graduate-school" && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text text-gray-300">University *</span>
+                        <span className="label-text text-gray-300">
+                          University *
+                        </span>
                       </label>
                       <input
                         type="text"
@@ -454,7 +564,9 @@ const RecommendationsList = () => {
                     </div>
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text text-gray-300">Program *</span>
+                        <span className="label-text text-gray-300">
+                          Program *
+                        </span>
                       </label>
                       <input
                         type="text"
@@ -518,7 +630,9 @@ const RecommendationsList = () => {
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Your Message *</span>
+                    <span className="label-text text-gray-300">
+                      Your Message *
+                    </span>
                   </label>
                   <textarea
                     name="message"
@@ -533,7 +647,9 @@ const RecommendationsList = () => {
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-gray-300">Additional Information (Optional)</span>
+                    <span className="label-text text-gray-300">
+                      Additional Information (Optional)
+                    </span>
                   </label>
                   <textarea
                     name="additionalInfo"

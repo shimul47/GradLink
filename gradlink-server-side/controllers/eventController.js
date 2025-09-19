@@ -133,3 +133,18 @@ exports.getEventsByCreator = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: err });
   }
 };
+exports.getEventsBySender = async (req, res) => {
+  try {
+    const { responderId } = req.params; // match your route parameter
+
+    const [events] = await mySqlPool.query(
+      "SELECT * FROM events WHERE responderId = ? ORDER BY created_at DESC",
+      [responderId]
+    );
+
+    res.status(200).json(events);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error", error: err });
+  }
+};
